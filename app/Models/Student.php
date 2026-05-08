@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+
+#[Fillable(['profile_picture_path', 'school', 'region', 'city', 'resume_path', 'cellphone_number'])]
+class Student extends Model
+{
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function course()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function skill()
+    {
+        return $this->belongsToMany(Skill::class, 'student_skills');
+    }
+
+    public function application()
+    {
+        return $this->hasMany(Application::class);
+    }
+
+    public function report()
+    {
+        return $this->morphMany(Report::class, 'reportable');
+    }
+}
