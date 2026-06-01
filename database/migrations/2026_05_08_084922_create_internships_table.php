@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('region');
             $table->string('setup');
             $table->string('allowance');
+            $table->integer('duration');
+            $table->string('duration_unit');
             $table->boolean('is_active');
             $table->softDeletes();
             $table->foreignIdFor(Company::class)->constrained();

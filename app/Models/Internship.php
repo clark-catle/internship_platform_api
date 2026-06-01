@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Enum\Internship\InternshipSetupEnum;
 use App\Enum\Internship\InternshipAllowanceEnum;
+use App\Enum\Internship\InternshipDurationUnitEnum;
 
-#[Fillable(['title', 'description', 'requirements', 'region', 'city', 'setup', 'allowance', 'is_active'])]
+
+#[Fillable(['title', 'description', 'requirements', 'region', 'city', 'setup', 'allowance', 'is_active', 'duration', 'duration_unit'])]
 class Internship extends Model
 {
     use SoftDeletes;
@@ -18,7 +20,9 @@ class Internship extends Model
         return [
             'setup' => InternshipSetupEnum::class,
             'allowance' => InternshipAllowanceEnum::class,
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
+            'duration' => 'int',
+            'duration_unit' => InternshipDurationUnitEnum::class
         ];
     }
 
