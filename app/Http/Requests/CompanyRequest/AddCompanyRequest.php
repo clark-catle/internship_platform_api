@@ -12,7 +12,7 @@ class AddCompanyRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,7 @@ class AddCompanyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_name'      => ['required', 'string', 'max:255', 'unique:companies,name'],
+            'company_name'      => ['required', 'string', 'max:255', 'unique:companies,company_name'],
             'company_logo_path' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'description'       => ['required', 'string', 'max:5000'],
             'region'            => ['required', 'string', 'max:255'],
