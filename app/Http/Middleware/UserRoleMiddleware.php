@@ -14,13 +14,8 @@ class UserRoleMiddleware
      *
      * @param  Closure(Request): (Response)  $next
      */
-    public function handle(Request $request, Closure $next, array ...$roles): Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        $user = $request->user();
-        $allowed = array_map(fn($r) => UserRoleEnum::from($r), $roles);
-
-        dd($allowed);
-
         if (!$request->user() || !in_array($request->user()->role->value, $roles))
             return response()->json(['message' => 'You are not authorize to access this'], 403);
 
