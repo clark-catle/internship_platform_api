@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 
-#[Fillable(['company_name', 'company_logo_path', 'description', 'region', 'city', 'website ', 'is_verified'])]
+#[Fillable(['company_name', 'company_logo_path', 'description', 'region', 'city', 'website', 'is_verified', 'user_id'])]
 class Company extends Model
 {
+
     public function casts(): array
     {
         return [

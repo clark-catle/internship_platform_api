@@ -15,6 +15,7 @@ namespace App\Models{
 /**
  * @property int $id
  * @property \App\Enum\Application\ApplicationStatusEnum $status
+ * @property string $progress
  * @property \Illuminate\Support\Carbon $applied_at
  * @property int $student_id
  * @property int $internship_id
@@ -29,6 +30,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Application whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Application whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Application whereInternshipId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Application whereProgress($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Application whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Application whereStudentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Application whereUpdatedAt($value)

@@ -16,6 +16,7 @@ class AddCompanyDTO
         public readonly string $region,
         public readonly string $city,
         public readonly string $website,
+        public readonly bool $is_verified = false
     ) {}
 
     public static function fromRequest(AddCompanyRequest $request)
@@ -31,5 +32,18 @@ class AddCompanyDTO
             city: $validated['city'],
             website: $validated['website'],
         );
+    }
+
+    public function toArray()
+    {
+        return [
+            'company_name' => $this->company_name,
+            'company_logo_path' => $this->company_logo_path,
+            'description' => $this->description,
+            'region' => $this->region,
+            'city' => $this->city,
+            'website' => $this->website,
+            'is_verified' => $this->is_verified
+        ];
     }
 }
