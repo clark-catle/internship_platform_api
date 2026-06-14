@@ -2,7 +2,8 @@
 
 namespace App\DTOs\Company;
 
-use App\Http\Requests\CompanyRequest\AddCompanyRequest;
+use App\Http\Requests\CompanyRequests\AddCompanyRequest;
+use Illuminate\Http\UploadedFile;
 
 class AddCompanyDTO
 {
@@ -11,7 +12,7 @@ class AddCompanyDTO
      */
     public function __construct(
         public readonly string $company_name,
-        public readonly string $company_logo_path,
+        public readonly UploadedFile $company_logo,
         public readonly string $description,
         public readonly string $region,
         public readonly string $city,
@@ -21,12 +22,11 @@ class AddCompanyDTO
 
     public static function fromRequest(AddCompanyRequest $request)
     {
-
         $validated = $request->validated();
 
         return new self(
             company_name: $validated['company_name'],
-            company_logo_path: $validated['company_logo_path'],
+            company_logo: $request->file('company_logo'),
             description: $validated['description'],
             region: $validated['region'],
             city: $validated['city'],
@@ -38,7 +38,7 @@ class AddCompanyDTO
     {
         return [
             'company_name' => $this->company_name,
-            'company_logo_path' => $this->company_logo_path,
+            'company_logo' => $this->company_logo,
             'description' => $this->description,
             'region' => $this->region,
             'city' => $this->city,

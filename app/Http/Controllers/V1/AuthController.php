@@ -9,13 +9,18 @@ use App\Http\Requests\AuthRequest\LoginRequest;
 use App\Http\Requests\AuthRequest\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Services\AuthService;
+use Dedoc\Scramble\Attributes\Endpoint;
 
+/**
+ * @tags Registration and Login
+ */
 class AuthController extends Controller
 {
     public function __construct(
         private AuthService $authService,
     ) {}
 
+    #[Endpoint(title: 'Registration', description: 'The user can register by passing the necessary info')]
     public function register(RegisterRequest $request)
     {
         $val = $this->authService->register(RegisterDTO::fromRequest($request));
@@ -26,6 +31,7 @@ class AuthController extends Controller
         ]);
     }
 
+    #[Endpoint(title: 'Login', description: 'The user can login to system by passing the user credentials')]
     public function login(LoginRequest $request)
     {
         $val = $this->authService->login(LoginDTO::fromRequest($request));

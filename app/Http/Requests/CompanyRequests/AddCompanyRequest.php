@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\CompanyRequest;
+namespace App\Http\Requests\CompanyRequests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -23,12 +23,12 @@ class AddCompanyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_name'      => ['required', 'string', 'max:255', 'unique:companies,company_name'],
-            'company_logo_path' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
-            'description'       => ['required', 'string', 'max:5000'],
-            'region'            => ['required', 'string', 'max:255'],
-            'city'              => ['required', 'string', 'max:255'],
-            'website'           => ['nullable', 'url', 'max:255'],
+            'company_name'  => ['required', 'string', 'max:255', 'unique:companies,company_name'],
+            'company_logo'  => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'description'   => ['required', 'string', 'max:5000'],
+            'region'        => ['required', 'string', 'max:255'],
+            'city'          => ['required', 'string', 'max:255'],
+            'website'       => ['nullable', 'url', 'max:255'],
         ];
     }
 }
