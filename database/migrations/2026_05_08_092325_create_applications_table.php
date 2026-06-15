@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('status')->default(ApplicationStatusEnum::Pending->value);
             $table->string('progress')->default(ApplicationProgressEnum::Applied->value);
             $table->datetime('applied_at');
+            $table->foreignId('resume_id')->nullable()->constrained('files');
             $table->foreignIdFor(Student::class)->constrained();
             $table->foreignIdFor(Internship::class)->constrained();
             $table->unique(['student_id', 'internship_id']);

@@ -24,7 +24,7 @@ class AddCompanyRequest extends FormRequest
     {
         return [
             'company_name'  => ['required', 'string', 'max:255', 'unique:companies,company_name'],
-            'company_logo'  => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'company_logo'  => ['required', 'max:2048'],
             'description'   => ['required', 'string', 'max:5000'],
             'region'        => ['required', 'string', 'max:255'],
             'city'          => ['required', 'string', 'max:255'],

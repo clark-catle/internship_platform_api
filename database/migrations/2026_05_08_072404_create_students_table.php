@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->string('profile_picture_path');
             $table->string('school');
             $table->string('region');
             $table->string('city');
-            $table->string('resume_path')->nullable();
             $table->string('cellphone_number');
+            $table->foreignId('avatar_id')->nullable()->constrained('files');
+            $table->foreignId('resume_id')->nullable()->constrained('files');
             $table->foreignIdFor(User::class)->constrained();
             $table->foreignIdFor(Course::class)->nullable()->constrained();
             $table->string('course_other')->nullable();

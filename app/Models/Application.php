@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use App\Enum\Application\ApplicationStatusEnum;
 
-#[Fillable(['status', 'applied_at'])]
+#[Fillable(['status', 'applied_at', 'resume_id'])]
 class Application extends Model
 {
     public function casts()
@@ -15,6 +15,11 @@ class Application extends Model
             'status' => ApplicationStatusEnum::class,
             'applied_at' => 'datetime'
         ];
+    }
+
+    public function resume()
+    {
+        return $this->belongsTo(File::class, 'resume_id');
     }
 
     public function student()

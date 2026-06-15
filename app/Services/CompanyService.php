@@ -20,6 +20,6 @@ class CompanyService
      */
     public function addCompany(AddCompanyDTO $data, User $user)
     {
-        return DB::transaction(fn() => $this->companyRepo->addCompany($data, $user));
+        return DB::transaction(function () use ($data, $user) {});
     }
 }

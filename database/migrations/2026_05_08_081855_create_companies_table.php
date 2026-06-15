@@ -15,12 +15,12 @@ return new class extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->string('company_name');
-            $table->string('company_logo_path');
             $table->string('description');
             $table->string('region');
             $table->string('city');
             $table->string('website')->nullable();
             $table->boolean('is_verified');
+            $table->foreignId('logo_id')->nullable()->constrained('files');
             $table->foreignIdFor(User::class)->constrained();
             $table->timestamps();
         });

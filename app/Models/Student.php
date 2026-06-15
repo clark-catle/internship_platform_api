@@ -5,9 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 
-#[Fillable(['profile_picture_path', 'school', 'region', 'city', 'resume_path', 'cellphone_number'])]
+#[Fillable(['avatar_id', 'school', 'region', 'city', 'resume_id', 'cellphone_number'])]
 class Student extends Model
 {
+    public function avatar()
+    {
+        return $this->belongsTo(File::class, 'avatar_id');
+    }
+
+    public function resume()
+    {
+        return $this->belongsTo(File::class, 'resume_id');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
