@@ -24,8 +24,6 @@ class CompanyController extends Controller
         $validated = AddCompanyDTO::fromRequest($request);
         $user = $request->user();
 
-        dd($validated->company_logo);
-
         $company =  $this->companyService->addCompany($validated, $user);
 
         return response()->json([

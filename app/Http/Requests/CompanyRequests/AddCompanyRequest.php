@@ -23,12 +23,12 @@ class AddCompanyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_name'  => ['required', 'string', 'max:255', 'unique:companies,company_name'],
-            'company_logo'  => ['required', 'max:2048'],
-            'description'   => ['required', 'string', 'max:5000'],
+            'company_name'  => ['required', 'string', 'min:5', 'max:255'],
+            'logo'          => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'description'   => ['required', 'string', 'min:20', 'max:5000'],
             'region'        => ['required', 'string', 'max:255'],
             'city'          => ['required', 'string', 'max:255'],
-            'website'       => ['nullable', 'url', 'max:255'],
+            'website'       => ['nullable', 'url', 'max:2083', 'regex:/^https:\/\//'],
         ];
     }
 }

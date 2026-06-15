@@ -17,11 +17,13 @@ namespace App\Models{
  * @property \App\Enum\Application\ApplicationStatusEnum $status
  * @property string $progress
  * @property \Illuminate\Support\Carbon $applied_at
+ * @property int|null $resume_id
  * @property int $student_id
  * @property int $internship_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Internship|null $internship
+ * @property-read \App\Models\File|null $resume
  * @property-read \App\Models\Student $student
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Application newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Application newQuery()
@@ -31,6 +33,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Application whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Application whereInternshipId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Application whereProgress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Application whereResumeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Application whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Application whereStudentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Application whereUpdatedAt($value)
@@ -42,17 +45,18 @@ namespace App\Models{
 /**
  * @property int $id
  * @property string $company_name
- * @property string $company_logo_path
  * @property string $description
  * @property string $region
  * @property string $city
  * @property string|null $website
  * @property bool $is_verified
+ * @property int|null $logo_id
  * @property int $user_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Internship> $internship
  * @property-read int|null $internship_count
+ * @property-read \App\Models\File|null $logo
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Report> $report
  * @property-read int|null $report_count
  * @property-read \App\Models\User $user
@@ -60,12 +64,12 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereCity($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereCompanyLogoPath($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereCompanyName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereIsVerified($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereLogoId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereRegion($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereUserId($value)
@@ -95,6 +99,31 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Course withoutTrashed()
  */
 	class Course extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property string $filename
+ * @property string $path
+ * @property \App\Enum\File\FileMimeTypeEnum $mime_type
+ * @property \App\Enum\File\FileCategoryEnum $category
+ * @property int $size
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereCategory($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereFilename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereMimeType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File wherePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereUpdatedAt($value)
+ */
+	class File extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -266,12 +295,12 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
- * @property string $profile_picture_path
  * @property string $school
  * @property string $region
  * @property string $city
- * @property string|null $resume_path
  * @property string $cellphone_number
+ * @property int|null $avatar_id
+ * @property int|null $resume_id
  * @property int $user_id
  * @property int|null $course_id
  * @property string|null $course_other
@@ -279,24 +308,26 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Application> $application
  * @property-read int|null $application_count
+ * @property-read \App\Models\File|null $avatar
  * @property-read \App\Models\User|null $course
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Report> $report
  * @property-read int|null $report_count
+ * @property-read \App\Models\File|null $resume
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Skill> $skill
  * @property-read int|null $skill_count
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereAvatarId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereCellphoneNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereCity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereCourseId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereCourseOther($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereProfilePicturePath($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereRegion($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereResumePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereResumeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereSchool($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereUserId($value)

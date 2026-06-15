@@ -19,7 +19,7 @@ class CompanyResource extends JsonResource
             'company' => [
                 'id' => $this->id,
                 'company_name' => $this->company_name,
-                'company_logo_path' => $this->company_logo_path,
+                'company_logo_path' => $this->logo->path,
                 'description' => $this->description,
                 'region' => $this->region,
                 'city' => $this->city,

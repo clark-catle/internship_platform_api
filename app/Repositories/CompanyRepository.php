@@ -3,24 +3,34 @@
 namespace App\Repositories;
 
 use App\DTOs\Company\AddCompanyDTO;
-use App\Models\User;
+use App\Models\Company;
 
 class CompanyRepository
 {
     /**
      * Create a new class instance.
      */
-    public function __construct() {}
+    public function __construct(private Company $company) {}
 
     /**
-     * creating a company info base on the passed `$user`
-     * and `$data` then returning it
+     * creating a new record of company base on 
+     * the passed argumanents then returning it
      * @param AddCompanyDTO $data
-     * @param User $user
-     * @return \App\Models\Company
+     * @param int $userId
+     * @param string $fileId
+     * @return Company
      */
-    public function addCompany(AddCompanyDTO $data, User $user)
+    public function addCompany(AddCompanyDTO $data, int $userId, string $fileId)
     {
-        return $user->company()->create($data->toArray());
+        return $this->company->create([
+            'company_name' => $data->company_name,
+            'description' => $data->description,
+            'region' => $data->region,
+            'city' => $data->city,
+            'website' => $data->website,
+            'is_verified' => $data->is_verified,
+            'user_id' => $userId,
+            'logo_id' => $fileId
+        ]);
     }
 }

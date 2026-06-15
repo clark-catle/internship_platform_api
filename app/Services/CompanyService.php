@@ -6,11 +6,15 @@ use App\DTOs\Company\AddCompanyDTO;
 use App\Models\User;
 use App\Repositories\CompanyRepository;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CompanyService
 {
 
-    public function __construct(private CompanyRepository $companyRepo) {}
+    public function __construct(
+        private CompanyRepository $companyRepo,
+        private FileService $fileService
+    ) {}
 
     /**
      * recieveing `$data` and `$user` then passing it into repository for
@@ -20,6 +24,18 @@ class CompanyService
      */
     public function addCompany(AddCompanyDTO $data, User $user)
     {
-        return DB::transaction(function () use ($data, $user) {});
+        return DB::transaction(function () use ($data, $user) {
+            $file = $this->fileService->addImage($data->logo);
+
+            $company = $this->companyRepo->addCompany(
+                $data,
+                $user->id,
+                $file->id
+            );
+
+            $company->load('logo');
+
+            return $company;
+        });
     }
 }
