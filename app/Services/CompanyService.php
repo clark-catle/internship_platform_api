@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Repositories\CompanyRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 class CompanyService
 {
@@ -25,6 +26,11 @@ class CompanyService
     public function addCompany(AddCompanyDTO $data, User $user)
     {
         return DB::transaction(function () use ($data, $user) {
+            $exists = $this->companyRepo->companyExist($user);
+
+            if ($exists)
+                throw new ConflictHttpException('User already has a company profile.');
+
             $file = $this->fileService->addImage($data->logo);
 
             $company = $this->companyRepo->addCompany(

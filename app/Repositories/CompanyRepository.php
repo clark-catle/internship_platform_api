@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\DTOs\Company\AddCompanyDTO;
 use App\Models\Company;
+use App\Models\User;
 
 class CompanyRepository
 {
@@ -32,5 +33,10 @@ class CompanyRepository
             'user_id' => $userId,
             'logo_id' => $fileId
         ]);
+    }
+
+    public function companyExist(User $user)
+    {
+        return $user->company()->exists();
     }
 }
