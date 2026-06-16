@@ -17,5 +17,6 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:sanctum', 'status', 'verified', 'throttle:api'])->group(function () {
         require __DIR__ . '/api/v1/company.php';
         require __DIR__ . '/api/v1/student.php';
+        require __DIR__ . '/api/v1/file.php';
     });
 });

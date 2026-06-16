@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\DTOs\File\AddFileDTO;
 use App\Models\File;
+use Illuminate\Support\Facades\Storage;
 
 class FileRepository
 {
@@ -24,5 +25,26 @@ class FileRepository
             'category' => $data->category,
             'size' => $data->size,
         ]);
+    }
+
+    /**
+     * finds the file base on the passed `$id` then returning it
+     * @param int $id
+     * @return File|\Illuminate\Database\Eloquent\Builder<File>
+     */
+    public function getFileById(int $id)
+    {
+        return $this->file->find($id);
+    }
+
+    /**
+     * getting the contents of file base on 
+     * the path of `$file` then returning it
+     * @param File $file
+     * @return string|null
+     */
+    public function getFileContent(File $file)
+    {
+        return Storage::disk('private')->get($file->path);
     }
 }
