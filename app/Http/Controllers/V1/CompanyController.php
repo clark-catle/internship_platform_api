@@ -5,6 +5,7 @@ namespace App\Http\Controllers\V1;
 use App\DTOs\Company\AddCompanyDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CompanyRequests\AddCompanyRequest;
+use App\Http\Requests\CompanyRequests\EditCompanyRequest;
 use App\Http\Resources\CompanyResource;
 use App\Services\CompanyService;
 use Dedoc\Scramble\Attributes\Endpoint;
@@ -30,5 +31,10 @@ class CompanyController extends Controller
             'message' => 'Company info has been created successfully',
             'information' => CompanyResource::make($company)
         ]);
+    }
+
+    public function editCompany(EditCompanyRequest $request)
+    {
+        return $request->validated();
     }
 }

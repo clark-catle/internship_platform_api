@@ -28,7 +28,7 @@ class AddCompanyRequest extends FormRequest
             'description'   => ['required', 'string', 'min:20', 'max:5000'],
             'region'        => ['required', 'string', 'max:255'],
             'city'          => ['required', 'string', 'max:255'],
-            'website'       => ['nullable', 'url', 'max:2083', 'regex:/^https:\/\//'],
+            'website'       => ['sometimes', 'nullable', 'url', 'max:2083', 'regex:/^https:\/\//'],
         ];
     }
 }
