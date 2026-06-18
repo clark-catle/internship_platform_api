@@ -47,11 +47,44 @@ class CompanyService
         });
     }
 
+    /**
+     * checks if the user has a company first then checks if theres a 
+     * passed logo in `$data`, then if there is, it will store it in the
+     * db and storage first then remove the old image later, but if theres
+     * no passed logo, then it will just update the value of company
+     * then it will return the company
+     * @param EditCompanyDTO $data
+     * @param User $user
+     */
     public function editCompany(EditCompanyDTO $data, User $user)
     {
         return DB::transaction(function () use ($data, $user) {
-            if (filled($data->logo))
-                dd();
+            $exists = $this->companyRepo->companyExist($user);
+
+            if (!$exists)
+                throw new ConflictHttpException('User doesn\'t have a company profile yet.');
+
+            $newFile = null;
+
+            //storing if passed
+            if ($data->logo)
+                $newFile = $this->fileService->addFile($data->logo, FileCategoryEnum::Image);
+
+            $updatable = $data->toUpdatable($newFile);
+
+            $company = $user->company;
+
+            $oldLogoId = $company->logo_id;
+
+            $this->companyRepo->editCompany($company, $updatable);
+
+            // removes the previous logo of company if theres a passed logo in the request
+            if ($newFile) {
+                $this->fileService->removeFileById($oldLogoId);
+                $company->fresh(['logo']);
+            }
+
+            return $company;
         });
     }
 }

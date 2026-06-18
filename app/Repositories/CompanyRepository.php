@@ -35,8 +35,23 @@ class CompanyRepository
         ]);
     }
 
+    /**
+     * checks if the `$user` info has a company info
+     * @param User $user
+     * @return bool
+     */
     public function companyExist(User $user)
     {
         return $user->company()->exists();
+    }
+
+    /**
+     * updating the info of `$company` base on the passed `$data`
+     * @param Company $company
+     * @param array $data
+     */
+    public function editCompany(Company $company, array $data)
+    {
+        $company->update($data);
     }
 }

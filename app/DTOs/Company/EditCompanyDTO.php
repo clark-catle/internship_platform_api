@@ -3,6 +3,7 @@
 namespace App\DTOs\Company;
 
 use App\Http\Requests\CompanyRequests\EditCompanyRequest;
+use App\Models\File;
 use Illuminate\Http\UploadedFile;
 
 class EditCompanyDTO
@@ -31,11 +32,16 @@ class EditCompanyDTO
         );
     }
 
-    public function toUpdatable()
+    /**
+     * returns an array that can be passed to updated()
+     * @param mixed $file
+     * @return array
+     */
+    public function toUpdatable(?File $file)
     {
         return array_filter([
             "company_name" => $this->company_name,
-            "logo" => $this->logo,
+            "logo_id" => $file->id,
             "description" => $this->description,
             "region" => $this->region,
             "city" => $this->city,

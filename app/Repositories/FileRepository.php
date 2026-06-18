@@ -45,8 +45,33 @@ class FileRepository
         return Storage::disk('private')->get($file->path);
     }
 
-    public function removeFile(File $file)
+    /**
+     * finds the file base on the passed $id` then returning it
+     * @param int $id
+     * @return File
+     */
+    public function getFileById(int $id)
+    {
+        return $this->file->find($id);
+    }
+
+    /**
+     * removes the file in the private storage base on the passed `$file` 
+     * @param File $file
+     * @return void
+     */
+    public function removeStorageFile(File $file)
     {
         Storage::disk('private')->delete($file->path);
+    }
+
+    /**
+     * removes the `$file` in the database
+     * @param File $file
+     * @return void
+     */
+    public function removeDBFile(File $file)
+    {
+        $file->delete();
     }
 }

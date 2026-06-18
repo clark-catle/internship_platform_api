@@ -68,10 +68,22 @@ class FileService
         ]);
     }
 
-    public function removeFile(File $file, UploadedFile $newFile)
+    /**
+     * gets the file info first base on the passed `$fileId`
+     * then removes the file info in both db and storage
+     * @param string $fileId
+     */
+    public function removeFileById(string $fileId)
     {
-        return DB::transaction(function () use ($file, $newFile) {
-            $file->delete();
+        DB::transaction(function () use ($fileId) {
+            $file = $this->fileRepo->getFileById($fileId);
+
+            if (!$file)
+                return;
+
+            $this->fileRepo->removeDBFile($file);
+
+            $this->fileRepo->removeStorageFile($file);
         });
     }
 }

@@ -39,8 +39,11 @@ class CompanyController extends Controller
         $validated = EditCompanyDTO::fromRequest($request);
         $user = $request->user();
 
-        dd($validated->toUpdatable());
+        $company = $this->companyService->editCompany($validated, $user);
 
-        return;
+        return response()->json([
+            'message' => 'Company info has been updated successfully',
+            'information' => CompanyResource::make($company)
+        ]);
     }
 }
