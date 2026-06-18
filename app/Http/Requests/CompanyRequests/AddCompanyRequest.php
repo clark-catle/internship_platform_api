@@ -4,6 +4,7 @@ namespace App\Http\Requests\CompanyRequests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Override;
 
 class AddCompanyRequest extends FormRequest
 {
@@ -29,6 +30,17 @@ class AddCompanyRequest extends FormRequest
             'region'        => ['required', 'string', 'max:255'],
             'city'          => ['required', 'string', 'max:255'],
             'website'       => ['sometimes', 'nullable', 'url', 'max:2083', 'regex:/^https:\/\//'],
+        ];
+    }
+
+    #[Override]
+    public function messages()
+    {
+        return [
+            'logo.mimes'    => 'Profile picture must be a JPEG, JPG, PNG, or WebP file.',
+            'logo.max'      => 'Profile picture must not exceed 5MB.',
+            'website.regex' => 'Website must use HTTPS.',
+            'website.url'   => 'Website must be a valid URL.',
         ];
     }
 }

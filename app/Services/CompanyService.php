@@ -28,9 +28,7 @@ class CompanyService
     public function addCompany(AddCompanyDTO $data, User $user)
     {
         return DB::transaction(function () use ($data, $user) {
-            $exists = $this->companyRepo->companyExist($user);
-
-            if ($exists)
+            if ($this->companyRepo->companyExist($user))
                 throw new ConflictHttpException('User already has a company profile.');
 
             $file = $this->fileService->addFile($data->logo, FileCategoryEnum::Image);
@@ -41,9 +39,7 @@ class CompanyService
                 $file->id
             );
 
-            $company->load('logo');
-
-            return $company;
+            return $company->load('user');
         });
     }
 
@@ -59,9 +55,7 @@ class CompanyService
     public function editCompany(EditCompanyDTO $data, User $user)
     {
         return DB::transaction(function () use ($data, $user) {
-            $exists = $this->companyRepo->companyExist($user);
-
-            if (!$exists)
+            if (!$this->companyRepo->companyExist($user))
                 throw new ConflictHttpException('User doesn\'t have a company profile yet.');
 
             $newFile = null;
@@ -79,12 +73,10 @@ class CompanyService
             $this->companyRepo->editCompany($company, $updatable);
 
             // removes the previous logo of company if theres a passed logo in the request
-            if ($newFile) {
+            if ($newFile)
                 $this->fileService->removeFileById($oldLogoId);
-                $company->fresh(['logo']);
-            }
 
-            return $company;
+            return $company->load('user');
         });
     }
 }

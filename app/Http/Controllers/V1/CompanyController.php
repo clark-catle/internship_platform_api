@@ -34,6 +34,8 @@ class CompanyController extends Controller
         ]);
     }
 
+
+    #[Endpoint(title: 'Edit Company Info', description: 'The user that has company role can edit their info about their company')]
     public function editCompany(EditCompanyRequest $request)
     {
         $validated = EditCompanyDTO::fromRequest($request);

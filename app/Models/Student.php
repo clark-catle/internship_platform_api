@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 
-#[Fillable(['avatar_id', 'school', 'region', 'city', 'resume_id', 'cellphone_number'])]
+#[Fillable(['avatar_id', 'resume_id', 'user_id', 'course_id', 'school', 'region', 'city', 'cellphone_number'])]
 class Student extends Model
 {
     public function avatar()
@@ -25,7 +25,7 @@ class Student extends Model
 
     public function course()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Course::class);
     }
 
     public function skill()

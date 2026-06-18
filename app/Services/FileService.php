@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\DTOs\File\AddFileDTO;
 use App\Enum\File\FileCategoryEnum;
 use App\Models\Company;
 use App\Models\File;

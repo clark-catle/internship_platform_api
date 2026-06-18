@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CompanyResource extends JsonResource
+class StudentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,12 +16,11 @@ class CompanyResource extends JsonResource
     {
         return [
             'user' => UserResource::make($request->user()),
-            'company' => [
+            'student' => [
                 'id' => $this->id,
-                'company_name' => $this->company_name,
-                'description' => $this->description,
-                'website' => $this->website,
-                'is_verified' => $this->is_verified,
+                'school' => $this->company_name,
+                'cellphone_number' => $this->description,
+                'course' => CourseResource::make($this->course),
                 'location' => [
                     'region' => $this->region,
                     'city' => $this->city,
