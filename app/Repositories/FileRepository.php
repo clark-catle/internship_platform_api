@@ -3,7 +3,9 @@
 namespace App\Repositories;
 
 use App\DTOs\File\AddFileDTO;
+use App\Enum\File\FileCategoryEnum;
 use App\Models\File;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 class FileRepository
@@ -11,30 +13,25 @@ class FileRepository
     public function __construct(private File $file) {}
 
     /**
-     * creating a new file info base on the 
-     * passed `$data` and returning it
-     * @param AddFileDTO $data
+     * storing the `$file` in private storage and its path
+     * is based on the passed `$category` then storing it
+     * in the database then returning it
+     * @param UploadedFile $file
+     * @param string $filename
+     * @param FileCategoryEnum $category
      * @return File
      */
-    public function createFile(AddFileDTO $data)
+    public function createFile(UploadedFile $file, string $filename, FileCategoryEnum $category)
     {
-        return $this->file->create([
-            'filename' => $data->filename,
-            'path' => $data->path,
-            'mime_type' => $data->mime_type,
-            'category' => $data->category,
-            'size' => $data->size,
-        ]);
-    }
+        $path = $file->storeAs($category->value, $filename, 'private');
 
-    /**
-     * finds the file base on the passed `$id` then returning it
-     * @param int $id
-     * @return File|\Illuminate\Database\Eloquent\Builder<File>
-     */
-    public function getFileById(int $id)
-    {
-        return $this->file->find($id);
+        return $this->file->create([
+            'filename' => $filename,
+            'path' => $path,
+            'mime_type' => $file->getMimeType(),
+            'category' => $category,
+            'size' => $file->getSize(),
+        ]);
     }
 
     /**
@@ -46,5 +43,10 @@ class FileRepository
     public function getFileContent(File $file)
     {
         return Storage::disk('private')->get($file->path);
+    }
+
+    public function removeFile(File $file)
+    {
+        Storage::disk('private')->delete($file->path);
     }
 }

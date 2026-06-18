@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1;
 
 use App\DTOs\Company\AddCompanyDTO;
+use App\DTOs\Company\EditCompanyDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CompanyRequests\AddCompanyRequest;
 use App\Http\Requests\CompanyRequests\EditCompanyRequest;
@@ -35,6 +36,11 @@ class CompanyController extends Controller
 
     public function editCompany(EditCompanyRequest $request)
     {
-        return $request->validated();
+        $validated = EditCompanyDTO::fromRequest($request);
+        $user = $request->user();
+
+        dd($validated->toUpdatable());
+
+        return;
     }
 }

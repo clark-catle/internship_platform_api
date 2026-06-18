@@ -13,7 +13,6 @@ class AddFileDTO
      */
     public function __construct(
         public readonly string $filename,
-        public readonly string $path,
         public readonly FileMimeTypeEnum $mime_type,
         public readonly int $size,
         public readonly FileCategoryEnum $category,
@@ -22,12 +21,10 @@ class AddFileDTO
     public static function fromFile(
         UploadedFile $file,
         FileCategoryEnum $category,
-        string $path,
         string $filename
     ) {
         return new self(
             filename: $filename,
-            path: $path,
             mime_type: FileMimeTypeEnum::from($file->getMimeType()),
             size: $file->getSize(),
             category: $category,

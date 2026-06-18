@@ -19,17 +19,15 @@ class EditCompanyDTO
         public readonly ?string $website,
     ) {}
 
-    public function fromRequest(EditCompanyRequest $request)
+    public static function fromRequest(EditCompanyRequest $request)
     {
-        $val = $request->validated();
-
         return new self(
-            company_name: $val['company_name'],
+            company_name: $request->string('company_name'),
             logo: $request->file('logo'),
-            description: $val['description'],
-            region: $val['region'],
-            city: $val['city'],
-            website: $val['website'],
+            description: $request->string('description'),
+            region: $request->string('region'),
+            city: $request->string('city'),
+            website: $request->string('website'),
         );
     }
 
@@ -42,6 +40,6 @@ class EditCompanyDTO
             "region" => $this->region,
             "city" => $this->city,
             "website" => $this->website,
-        ], fn($val) => filled($val));
+        ], filled(...));
     }
 }

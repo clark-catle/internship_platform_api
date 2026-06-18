@@ -20,46 +20,42 @@ class FileService
     public function __construct(private FileRepository $fileRepo) {}
 
     /**
-     * store the `$file` in the disk and creating a 
-     * unique filename for it, creating a record for it
-     * in database then returning it
+     * making a unique name for the `$file` then
+     * storing it in private storage wether in file
+     * or image path base on the passed `$category`
+     * then creating a record in db then returning it
      * @param UploadedFile $file
+     * @param FileCategoryEnum $category
      * @return File
      */
-    public function addImage(UploadedFile $file)
+    public function addFile(UploadedFile $file, FileCategoryEnum $category)
     {
-        return DB::transaction(function () use ($file) {
+        return DB::transaction(function () use ($file, $category) {
             $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
 
-            $path = $file->storeAs('image', $fileName, 'private');
-
             return $this->fileRepo->createFile(
-                AddFileDTO::fromFile(
-                    $file,
-                    FileCategoryEnum::Image,
-                    $path,
-                    $fileName
-                )
+                $file,
+                $fileName,
+                $category
             );
         });
     }
 
     /**
      * retrieving the company logo base on the 
-     * `$company` logo_id then returning a stream 
-     * response, if theres nothing, will throw error instead
+     * info of `$company` then returning it
      * @param Company $company
      * @throws NotFoundHttpException
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function getCompanyLogo(Company $company)
     {
-        $file = $this->fileRepo->getFileById($company->logo_id);
+        $logo = $company->logo;
 
-        if (!$file)
+        if (!$logo)
             throw new NotFoundHttpException('Image not found.');
 
-        $contents = $this->fileRepo->getFileContent($file);
+        $contents = $this->fileRepo->getFileContent($logo);
 
         if (!$contents)
             throw new NotFoundHttpException('Image file not found in storage.');
@@ -67,8 +63,15 @@ class FileService
         return response()->stream(function () use ($contents) {
             echo $contents;
         }, 200, [
-            'Content-Type'  => $file->mime_type->value,
+            'Content-Type'  => $logo->mime_type->value,
             'Cache-Control' => 'private, max-age=3600',
         ]);
+    }
+
+    public function removeFile(File $file, UploadedFile $newFile)
+    {
+        return DB::transaction(function () use ($file, $newFile) {
+            $file->delete();
+        });
     }
 }

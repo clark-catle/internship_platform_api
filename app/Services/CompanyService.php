@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\DTOs\Company\AddCompanyDTO;
+use App\DTOs\Company\EditCompanyDTO;
+use App\Enum\File\FileCategoryEnum;
 use App\Models\User;
 use App\Repositories\CompanyRepository;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +33,7 @@ class CompanyService
             if ($exists)
                 throw new ConflictHttpException('User already has a company profile.');
 
-            $file = $this->fileService->addImage($data->logo);
+            $file = $this->fileService->addFile($data->logo, FileCategoryEnum::Image);
 
             $company = $this->companyRepo->addCompany(
                 $data,
@@ -42,6 +44,14 @@ class CompanyService
             $company->load('logo');
 
             return $company;
+        });
+    }
+
+    public function editCompany(EditCompanyDTO $data, User $user)
+    {
+        return DB::transaction(function () use ($data, $user) {
+            if (filled($data->logo))
+                dd();
         });
     }
 }
