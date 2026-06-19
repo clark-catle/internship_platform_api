@@ -18,8 +18,8 @@ class StudentResource extends JsonResource
             'user' => UserResource::make($request->user()),
             'student' => [
                 'id' => $this->id,
-                'school' => $this->company_name,
-                'cellphone_number' => $this->description,
+                'school' => $this->school,
+                'cellphone_number' => $this->cellphone_number,
                 'course' => CourseResource::make($this->course),
                 'location' => [
                     'region' => $this->region,

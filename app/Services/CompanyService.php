@@ -58,13 +58,10 @@ class CompanyService
             if (!$this->companyRepo->companyExist($user))
                 throw new ConflictHttpException('User doesn\'t have a company profile yet.');
 
-            $newFile = null;
+            $newFile = $data->logo ?
+                $newFile = $this->fileService->addFile($data->logo, FileCategoryEnum::Image) : null;
 
-            //storing if passed
-            if ($data->logo)
-                $newFile = $this->fileService->addFile($data->logo, FileCategoryEnum::Image);
-
-            $updatable = $data->toUpdatable($newFile);
+            $updatable = $data->toUpdatable($newFile?->id);
 
             $company = $user->company;
 

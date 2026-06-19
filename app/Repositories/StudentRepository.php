@@ -45,4 +45,15 @@ class StudentRepository
             "resume_id" => $resumeId,
         ]);
     }
+
+    /**
+     * updating the `$student` info base on the passed `$data`
+     * @param Student $student
+     * @param array $data
+     * @return void
+     */
+    public function editStudent(Student $student, array $data)
+    {
+        $student->update($data);
+    }
 }

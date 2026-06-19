@@ -34,14 +34,14 @@ class EditCompanyDTO
 
     /**
      * returns an array that can be passed to updated()
-     * @param mixed $file
+     * @param mixed $logo_id
      * @return array
      */
-    public function toUpdatable(?File $file)
+    public function toUpdatable(?int $logo_id)
     {
         return array_filter([
             "company_name" => $this->company_name,
-            "logo_id" => $file->id,
+            "logo_id" => $logo_id,
             "description" => $this->description,
             "region" => $this->region,
             "city" => $this->city,
