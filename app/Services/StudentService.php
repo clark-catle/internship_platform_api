@@ -106,4 +106,18 @@ class StudentService
             "avatar" => $avatar
         ];
     }
+
+    /**
+     * returns a student info base on the passed `$user`
+     * @param User $user
+     * @throws ConflictHttpException
+     * @return Student
+     */
+    public function getCompany(User $user)
+    {
+        if (!$this->studentRepo->studentExist($user))
+            throw new ConflictHttpException('User doesn\'t have a student profile yet.');
+
+        return $user->student->setRelation('user', $user);
+    }
 }

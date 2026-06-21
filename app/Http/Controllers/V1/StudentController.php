@@ -42,4 +42,12 @@ class StudentController extends Controller
             'information' => StudentResource::make($student)
         ]);
     }
+
+    #[Endpoint(title: 'Get Student info', description: 'The user that has a student role can get their user info with their student info')]
+    public function getStudent()
+    {
+        $user = request()->user();
+
+        return StudentResource::make($this->studentService->getCompany($user));
+    }
 }

@@ -20,13 +20,6 @@ class CompanyController extends Controller
         private CompanyService $companyService,
     ) {}
 
-    public function getCompany()
-    {
-        $user = request()->user();
-
-        return CompanyResource::make($this->companyService->getCompany($user));
-    }
-
     #[Endpoint(title: 'Add Company Info', description: 'The user that has company role can add their info about their company')]
     public function addCompany(AddCompanyRequest $request)
     {
@@ -54,5 +47,13 @@ class CompanyController extends Controller
             'message' => 'Company info has been updated successfully',
             'information' => CompanyResource::make($company)
         ]);
+    }
+
+    #[Endpoint(title: 'Get Company info', description: 'The user that has a company role can get their user info with their company info')]
+    public function getCompany()
+    {
+        $user = request()->user();
+
+        return CompanyResource::make($this->companyService->getCompany($user));
     }
 }
