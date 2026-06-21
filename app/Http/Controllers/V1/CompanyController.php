@@ -20,6 +20,13 @@ class CompanyController extends Controller
         private CompanyService $companyService,
     ) {}
 
+    public function getCompany()
+    {
+        $user = request()->user();
+
+        return CompanyResource::make($this->companyService->getCompany($user));
+    }
+
     #[Endpoint(title: 'Add Company Info', description: 'The user that has company role can add their info about their company')]
     public function addCompany(AddCompanyRequest $request)
     {

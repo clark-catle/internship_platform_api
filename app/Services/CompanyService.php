@@ -76,4 +76,18 @@ class CompanyService
             return $company->load('user');
         });
     }
+
+    /**
+     * returns a company info base on the passed `$user`
+     * @param User $user
+     * @throws ConflictHttpException
+     * @return \App\Models\Company|null
+     */
+    public function getCompany(User $user)
+    {
+        if (!$this->companyRepo->companyExist($user))
+            throw new ConflictHttpException('User doesn\'t have a company profile yet.');
+
+        return $user->company->setRelation('user', $user);
+    }
 }

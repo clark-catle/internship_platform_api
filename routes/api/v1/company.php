@@ -6,4 +6,5 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['role:company'])->prefix('company')->group(function () {
   Route::post('/addCompany', [CompanyController::class, 'addCompany'])->name('addCompany');
   Route::put('/editCompany', [CompanyController::class, 'editCompany'])->name('editCompany');
+  Route::get('/getCompany', [CompanyController::class, 'getCompany'])->name('getCompany');
 });
