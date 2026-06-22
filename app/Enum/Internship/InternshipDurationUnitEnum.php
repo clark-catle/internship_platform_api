@@ -4,7 +4,7 @@ namespace App\Enum\Internship;
 
 enum InternshipDurationUnitEnum: string
 {
-    case Non = 'non';
-    case Provided = 'provided';
-    case Discuss = 'discuss';
+    case Hr = 'hr';
+    case Day = 'day';
+    case Month = 'month';
 }
