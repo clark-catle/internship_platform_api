@@ -23,6 +23,4 @@ class StudentSkillRepository
     {
         $student->skill()->sync($skills);
     }
-
-    // public function 
 }

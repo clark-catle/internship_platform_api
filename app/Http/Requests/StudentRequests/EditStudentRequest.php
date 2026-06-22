@@ -31,6 +31,10 @@ class EditStudentRequest extends FormRequest
             'course_id'        => ['sometimes', 'nullable', 'exists:courses,id'],
             'avatar_image'     => ['sometimes', 'nullable', 'file', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
             'resume_file'      => ['sometimes', 'nullable', 'file', 'mimes:pdf,doc,docx', 'max:10240'],
+            'skills_id'        => ['sometimes', 'nullable', 'array'],
+            'skills_id.*'      => ['required', 'integer', 'exists:skills,id', 'distinct'],
+            'other_skills'     => ['sometimes', 'nullable', 'array'],
+            'other_skills.*'   => ['required', 'string', 'max:255', 'distinct:ignore_case']
         ];
     }
 
@@ -45,6 +49,11 @@ class EditStudentRequest extends FormRequest
             'avatar_image.max'          => 'Profile picture must not exceed 5MB.',
             'resume_file.mimes'         => 'Resume must be a PDF, DOC, or DOCX file.',
             'resume_file.max'           => 'Resume must not exceed 10MB.',
+            'skills_id.*.required'      => 'Pick a skill in the provided skills',
+            'skills_id.*.exists'        => 'Pick a skill in the provided skills',
+            'skills_id.*.distinct'      => 'Duplicate skills are not allowed.',
+            'other_skills.*.required'   => 'Add a name for the skill that is not in the skill list',
+            'other_skills.*.distinct'   => 'Duplicate skills are not allowed.',
         ];
     }
 }
