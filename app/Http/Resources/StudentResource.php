@@ -24,7 +24,8 @@ class StudentResource extends JsonResource
                 'location' => [
                     'region' => $this->region,
                     'city' => $this->city,
-                ]
+                ],
+                'student_skill' => SkillResource::collection($this->skill)
             ]
         ];
     }

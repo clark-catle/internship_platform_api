@@ -12,6 +12,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use \App\Models\File;
+use App\Repositories\StudentSkillRepository;
 
 class StudentService
 {
@@ -20,7 +21,9 @@ class StudentService
      */
     public function __construct(
         private StudentRepository $studentRepo,
-        private FileService $fileService
+        private FileService $fileService,
+        private StudentSkillRepository $studentSkillRepo,
+        private StudentSkillService $studentSkillService
     ) {}
 
     /**
@@ -46,7 +49,10 @@ class StudentService
                 $file["avatar"]?->id
             );
 
-            return $student->load(['user', 'course']);
+            if (filled($data->skills_id) || filled($data->other_skills))
+                $this->studentSkillService->createStudentSkill($student, $data->skills_id, $data->other_skills);
+
+            return $student->load(['user', 'course', 'skill']);
         });
     }
 

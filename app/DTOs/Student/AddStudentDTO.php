@@ -8,7 +8,8 @@ use Illuminate\Http\UploadedFile;
 class AddStudentDTO
 {
     /**
-     * Create a new class instance.
+     * @param int[] $skills_id
+     * @param string[] $other_skills
      */
     public function __construct(
         public readonly string $region,
@@ -18,6 +19,8 @@ class AddStudentDTO
         public readonly ?int $course_id,
         public readonly ?UploadedFile $avatar_image,
         public readonly ?UploadedFile $resume_file,
+        public readonly array $skills_id,
+        public readonly array $other_skills
     ) {}
 
     public static function fromRequest(AddStudentRequest $request)
@@ -27,9 +30,11 @@ class AddStudentDTO
             city: $request->string('city'),
             cellphone_number: $request->string('cellphone_number'),
             school: $request->string('school'),
-            course_id: $request->integer('course_id'),
+            course_id: $request->validated('course_id') ?? null,
             avatar_image: $request->file('avatar_image'),
             resume_file: $request->file('resume_file'),
+            skills_id: array_map('intval', $request->array('skills_id')),
+            other_skills: $request->array('other_skills'),
         );
     }
 }

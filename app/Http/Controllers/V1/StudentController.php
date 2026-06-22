@@ -18,7 +18,6 @@ class StudentController extends Controller
     #[Endpoint(title: 'Add Student info', description: 'The user that has a student role can add their student info')]
     public function addStudent(AddStudentRequest $request)
     {
-        dd($request->validated());
         $val = AddStudentDTO::fromRequest($request);
         $user = $request->user();
 
