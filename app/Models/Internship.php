@@ -10,7 +10,7 @@ use App\Enum\Internship\InternshipAllowanceEnum;
 use App\Enum\Internship\InternshipDurationUnitEnum;
 
 
-#[Fillable(['title', 'description', 'requirements', 'region', 'city', 'setup', 'allowance', 'is_active', 'duration', 'duration_unit'])]
+#[Fillable(['title', 'description', 'requirements', 'region', 'city', 'setup', 'allowance', 'is_active', 'duration', 'duration_unit', 'company_id'])]
 class Internship extends Model
 {
     use SoftDeletes;
@@ -31,7 +31,7 @@ class Internship extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function internshipSkill()
+    public function skill()
     {
         return $this->belongsToMany(Skill::class, 'internship_skills');
     }

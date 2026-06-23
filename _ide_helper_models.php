@@ -132,7 +132,7 @@ namespace App\Models{
  * @property string $title
  * @property string $description
  * @property string $requirements
- * @property string $region
+ * @property string|null $region
  * @property \App\Enum\Internship\InternshipSetupEnum $setup
  * @property \App\Enum\Internship\InternshipAllowanceEnum $allowance
  * @property int $duration
@@ -142,16 +142,18 @@ namespace App\Models{
  * @property int $company_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $city
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Application> $application
  * @property-read int|null $application_count
  * @property-read \App\Models\Company $company
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Skill> $internshipSkill
- * @property-read int|null $internship_skill_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Skill> $skill
+ * @property-read int|null $skill_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship whereAllowance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship whereCity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship whereDeletedAt($value)
@@ -309,7 +311,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Application> $application
  * @property-read int|null $application_count
  * @property-read \App\Models\File|null $avatar
- * @property-read \App\Models\User|null $course
+ * @property-read \App\Models\Course|null $course
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Report> $report
  * @property-read int|null $report_count
  * @property-read \App\Models\File|null $resume

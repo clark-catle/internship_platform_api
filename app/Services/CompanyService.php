@@ -10,6 +10,7 @@ use App\Repositories\CompanyRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CompanyService
 {
@@ -20,6 +21,32 @@ class CompanyService
     ) {}
 
     /**
+     * throws an exception if the `$user` doesnt have
+     * a company info in company table
+     * @param User $user
+     * @throws ConflictHttpException
+     * @return void
+     */
+    public function ensureCompanyExist(User $user): void
+    {
+        if (!$this->companyRepo->companyExist($user))
+            throw new ConflictHttpException('User doesn\'t have a company profile yet.');
+    }
+
+    /**
+     * throws an exception if the `$user` already has
+     * a company info in company table
+     * @param User $user
+     * @throws ConflictHttpException
+     * @return void
+     */
+    public function ensureCompanyDoesntExist(User $user): void
+    {
+        if ($this->companyRepo->companyExist($user))
+            throw new ConflictHttpException('User already has a company profile.');
+    }
+
+    /**
      * recieveing `$data` and `$user` then passing it into repository for
      * company creation base on `$user` and `$data` info
      * @param AddCompanyDTO $data
@@ -28,8 +55,7 @@ class CompanyService
     public function addCompany(AddCompanyDTO $data, User $user)
     {
         return DB::transaction(function () use ($data, $user) {
-            if ($this->companyRepo->companyExist($user))
-                throw new ConflictHttpException('User already has a company profile.');
+            $this->ensureCompanyDoesntExist($user);
 
             $file = $this->fileService->addFile($data->logo, FileCategoryEnum::Image);
 
@@ -55,8 +81,7 @@ class CompanyService
     public function editCompany(EditCompanyDTO $data, User $user)
     {
         return DB::transaction(function () use ($data, $user) {
-            if (!$this->companyRepo->companyExist($user))
-                throw new ConflictHttpException('User doesn\'t have a company profile yet.');
+            $this->ensureCompanyExist($user);
 
             $newFile = $data->logo ?
                 $newFile = $this->fileService->addFile($data->logo, FileCategoryEnum::Image) : null;
@@ -85,8 +110,7 @@ class CompanyService
      */
     public function getCompany(User $user)
     {
-        if (!$this->companyRepo->companyExist($user))
-            throw new ConflictHttpException('User doesn\'t have a company profile yet.');
+        $this->ensureCompanyExist($user);
 
         return $user->company->setRelation('user', $user);
     }

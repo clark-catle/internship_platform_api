@@ -23,7 +23,7 @@ class StudentService
         private StudentRepository $studentRepo,
         private FileService $fileService,
         private StudentSkillRepository $studentSkillRepo,
-        private StudentSkillService $studentSkillService
+        private SkillService $skillService
     ) {}
 
     /**
@@ -50,7 +50,7 @@ class StudentService
             );
 
             if (filled($data->skills_id) || filled($data->other_skills))
-                $this->studentSkillService->processStudentSkill($student, $data->skills_id, $data->other_skills);
+                $this->skillService->processStudentSkill($student, $data->skills_id, $data->other_skills);
 
             return $student->load(['user', 'course', 'skill']);
         });
@@ -89,7 +89,7 @@ class StudentService
                 $this->fileService->removeFileById($oldAvatarId);
 
             if (filled($data->skills_id) || filled($data->other_skills))
-                $this->studentSkillService->processStudentSkill($student, $data->skills_id, $data->other_skills);
+                $this->skillService->processStudentSkill($student, $data->skills_id, $data->other_skills);
 
             return $student->load(['user', 'course', 'skill']);
         });

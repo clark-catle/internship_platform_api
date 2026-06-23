@@ -26,13 +26,16 @@ class SkillRepository
     }
 
     /**
-     * get the skills base on the passed `$names`
-     * then returning only an array of id
+     * if `$names` is an empty array, it will return an empty 
+     * array, on the other hand, get the skills base on the 
+     * passed `$names` then returning only an array of id
      * @param array $names
      * @return array
      */
-    public function getIdByName(array $names)
+    public function getIdsByName(array $names)
     {
+        if (empty($names)) return [];
+
         return Skill::whereIn('name', $names)->pluck('id')->toArray();
     }
 }
