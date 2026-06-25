@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1;
 
 use App\DTOs\Internship\AddInternshipDTO;
+use App\DTOs\Internship\EditInternshipDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InternshipRequests\AddInternshipRequest;
 use App\Http\Requests\InternshipRequests\EditInternshipRequest;
@@ -33,6 +34,10 @@ class InternshipController extends Controller
     #[Endpoint(title: 'Edit internship', description: 'The user that has a company role can edit their own internship info and not other\'s internship')]
     public function editInternship(EditInternshipRequest $request, Internship $internship)
     {
+        $this->authorize('modify', $internship);
+
+        $val = EditInternshipDTO::fromRequest($request);
+
         return $request->validated();
     }
 }
