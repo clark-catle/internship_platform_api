@@ -38,7 +38,7 @@ class EditInternshipDTO
             city: $request->string('city'),
             setup: InternshipSetupEnum::tryFrom($request->string('setup')),
             allowance: InternshipAllowanceEnum::tryFrom($request->string('allowance')),
-            duration: $request->integer('duration') ?? null,
+            duration: $request->integer('duration') !== 0 ? $request->integer('duration') : null,
             duration_unit: InternshipDurationUnitEnum::tryFrom($request->string('duration_unit')),
             skills_id: array_map('intval', $request->array('skills_id')),
             other_skills: $request->array('other_skills'),

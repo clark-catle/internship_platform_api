@@ -48,4 +48,24 @@ class InternshipRepository
     {
         $internship->update($data);
     }
+
+    /**
+     * soft deletes the `$internship` info
+     * @param Internship $internship
+     * @return void
+     */
+    public function deleteInternship(Internship $internship)
+    {
+        $internship->delete();
+    }
+
+    /**
+     * soft deletes the `$internship` info
+     * @param Internship $internship
+     * @return void
+     */
+    public function restoreInternship(Internship $internship)
+    {
+        $internship->restore();
+    }
 }

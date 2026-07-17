@@ -13,4 +13,6 @@ Route::middleware(['role:company'])->prefix('company')->group(function () {
   //Internship
   Route::post('/addInternship', [InternshipController::class, 'addInternship'])->name('addInternship');
   Route::put('/editInternship/{internship}', [InternshipController::class, 'editInternship'])->name('editInternship');
+  Route::delete('/deleteInternship/{internship}', [InternshipController::class, 'deleteInternship'])->name('deleteInternship');
+  Route::put('/restoreInternship/{internship}', [InternshipController::class, 'restoreInternship'])->name('restoreInternship')->withTrashed();
 });

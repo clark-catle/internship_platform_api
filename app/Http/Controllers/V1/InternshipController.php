@@ -45,4 +45,29 @@ class InternshipController extends Controller
             'information' => InternshipResource::make($internship)
         ]);
     }
+
+    #[Endpoint(title: 'Delete internship', description: 'The user that has a company role can delete their own internship info and not other\'s internship')]
+    public function deleteInternship(Internship $internship)
+    {
+        $this->authorize('modify', $internship);
+
+        $this->internshipService->deleteInternship($internship);
+
+        return response()->json([
+            'message' => 'Internship has been deleted successfully',
+        ]);
+    }
+
+    #[Endpoint(title: 'Restore internship', description: 'The user that has a company role can restore their own internship that has been deleted not other\'s internship')]
+    public function restoreInternship(Internship $internship)
+    {
+        $this->authorize('modify', $internship);
+
+        $this->internshipService->restoreInternship($internship);
+
+        return response()->json([
+            'message' => 'Internship has been deleted successfully',
+            'information' => InternshipResource::make($internship)
+        ]);
+    }
 }

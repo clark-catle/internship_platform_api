@@ -44,6 +44,12 @@ class InternshipService
         });
     }
 
+    /**
+     * updates the `$internship` info base on the `$data` then 
+     * if theres a passed new
+     * @param Internship $internship
+     * @param EditInternshipDTO $data
+     */
     public function editInternship(Internship $internship, EditInternshipDTO $data)
     {
         return DB::transaction(function () use ($internship, $data) {
@@ -54,5 +60,29 @@ class InternshipService
 
             return $internship->load('skill');
         });
+    }
+
+    /**
+     * soft deletes the `$internship`
+     * @param Internship $internship
+     * @return void
+     */
+    public function deleteInternship(Internship $internship)
+    {
+        DB::transaction(
+            fn() => $this->internshipRepo->deleteInternship($internship)
+        );
+    }
+
+    /**
+     * restore the soft deleted `$internship`
+     * @param Internship $internship
+     * @return void
+     */
+    public function restoreInternship(Internship $internship)
+    {
+        DB::transaction(
+            fn() => $this->internshipRepo->restoreInternship($internship)
+        );
     }
 }
