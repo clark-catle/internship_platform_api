@@ -36,8 +36,13 @@ class InternshipController extends Controller
     {
         $this->authorize('modify', $internship);
 
-        $val = EditInternshipDTO::fromRequest($request);
+        $data = EditInternshipDTO::fromRequest($request);
 
-        return $request->validated();
+        $internship = $this->internshipService->editInternship($internship, $data);
+
+        return response()->json([
+            'message' => 'Internship has been updated successfully',
+            'information' => InternshipResource::make($internship)
+        ]);
     }
 }

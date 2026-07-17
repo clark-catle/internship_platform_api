@@ -36,10 +36,10 @@ class AddInternshipDTO
             requirements: $val['requirements'],
             region: $val['region'],
             city: $val['city'],
-            setup: $val['setup'],
-            allowance: $val['allowance'],
+            setup: InternshipSetupEnum::from($val['setup']),
+            allowance: InternshipAllowanceEnum::from($val['allowance']),
             duration: $val['duration'],
-            duration_unit: $val['duration_unit'],
+            duration_unit: InternshipDurationUnitEnum::from($val['duration_unit']),
             skills_id: array_map('intval', $request->array('skills_id')),
             other_skills: $request->array('other_skills'),
         );

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTOs\Internship\AddInternshipDTO;
+use App\DTOs\Internship\EditInternshipDTO;
 use App\Models\Internship;
 use App\Models\User;
 use App\Repositories\InternshipRepository;
@@ -37,9 +38,21 @@ class InternshipService
             $internship = $this->internshipRepo->addInternship($data, $company->id);
 
             if (filled($data->skills_id) || filled($data->other_skills))
-                $this->skillService->prcessIntershipSkill($internship, $data->skills_id, $data->other_skills);
+                $this->skillService->processIntershipSkill($internship, $data->skills_id, $data->other_skills);
 
-            return $internship->setRelation('company', $company)->load('skill');
+            return $internship->load('skill');
+        });
+    }
+
+    public function editInternship(Internship $internship, EditInternshipDTO $data)
+    {
+        return DB::transaction(function () use ($internship, $data) {
+            $this->internshipRepo->editInternship($internship, $data->toUpdatable());
+
+            if (filled($data->skills_id) || filled($data->other_skills))
+                $this->skillService->processIntershipSkill($internship, $data->skills_id, $data->other_skills);
+
+            return $internship->load('skill');
         });
     }
 }

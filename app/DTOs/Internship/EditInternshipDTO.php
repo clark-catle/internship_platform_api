@@ -31,17 +31,36 @@ class EditInternshipDTO
         $val = $request->validated();
 
         return new self(
-            title: $val['title'],
-            description: $val['description'],
-            requirements: $val['requirements'],
-            region: $val['region'],
-            city: $val['city'],
-            setup: $val['setup'],
-            allowance: $val['allowance'],
-            duration: $val['duration'],
-            duration_unit: $val['duration_unit'],
+            title: $request->string('title'),
+            description: $request->string('description'),
+            requirements: $request->string('requirements'),
+            region: $request->string('region'),
+            city: $request->string('city'),
+            setup: InternshipSetupEnum::tryFrom($request->string('setup')),
+            allowance: InternshipAllowanceEnum::tryFrom($request->string('allowance')),
+            duration: $request->integer('duration') ?? null,
+            duration_unit: InternshipDurationUnitEnum::tryFrom($request->string('duration_unit')),
             skills_id: array_map('intval', $request->array('skills_id')),
             other_skills: $request->array('other_skills'),
         );
+    }
+
+    /**
+     * returns an array that can be passed to updated()
+     * @return array
+     */
+    public function toUpdatable()
+    {
+        return array_filter([
+            "title" => $this->title,
+            "description" => $this->description,
+            "requirements" => $this->requirements,
+            "region" => $this->region,
+            "city" => $this->city,
+            "setup" => $this->setup,
+            "allowance" => $this->allowance,
+            "duration" => $this->duration,
+            "duration_unit" => $this->duration_unit,
+        ], filled(...));
     }
 }

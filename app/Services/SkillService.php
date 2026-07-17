@@ -69,7 +69,7 @@ class SkillService
      * @param string[] $other_skills
      * @return void
      */
-    public function prcessIntershipSkill(Internship $internship, array $skill_ids, array $other_skills)
+    public function processIntershipSkill(Internship $internship, array $skill_ids, array $other_skills)
     {
         DB::transaction(function () use ($internship, $skill_ids, $other_skills) {
             $this->insertOtherSkill($other_skills);

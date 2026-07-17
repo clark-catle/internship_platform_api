@@ -36,4 +36,16 @@ class InternshipRepository
             'company_id'    => $company_id
         ]);
     }
+
+    /**
+     * edit the info of `$internship` base on the 
+     * passed value of `$data`
+     * @param Internship $internship
+     * @param array $data
+     * @return void
+     */
+    public function editInternship(Internship $internship, array $data)
+    {
+        $internship->update($data);
+    }
 }
