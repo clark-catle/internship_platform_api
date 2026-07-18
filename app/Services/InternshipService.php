@@ -22,6 +22,17 @@ class InternshipService
     ) {}
 
     /**
+     * return all the internship
+     * @return \Illuminate\Database\Eloquent\Collection<int, Internship>
+     */
+    public function companyInternship(User $user)
+    {
+        $this->companyService->ensureCompanyExist($user);
+
+        return $this->internshipRepo->companyInternship($user->company);
+    }
+
+    /**
      * creates an internship info then returning it 
      * base on the passed value of `$data`
      * @param AddInternshipDTO $data

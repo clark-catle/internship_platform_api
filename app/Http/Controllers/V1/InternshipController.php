@@ -11,11 +11,29 @@ use App\Http\Resources\InternshipResource;
 use App\Models\Internship;
 use App\Services\InternshipService;
 use Dedoc\Scramble\Attributes\Endpoint;
-use Illuminate\Http\Request;
 
+/**
+ * @tags Internship
+ */
 class InternshipController extends Controller
 {
     public function __construct(private InternshipService $internshipService) {}
+
+    #[Endpoint(title: 'View internship', description: 'The user that has a company role can see their own posted internship info')]
+    public function companyInternship()
+    {
+        $user = request()->user();
+        $internship = $this->internshipService->companyInternship($user);
+
+        return InternshipResource::collection($internship);
+    }
+
+    public function specificCompanyInternship(Internship $internship)
+    {
+        $this->authorize('access', $internship);
+
+        return InternshipResource::make($internship);
+    }
 
     #[Endpoint(title: 'Create internship', description: 'The user that has a company role can create their own internship info')]
     public function addInternship(AddInternshipRequest $request)
@@ -34,7 +52,7 @@ class InternshipController extends Controller
     #[Endpoint(title: 'Edit internship', description: 'The user that has a company role can edit their own internship info and not other\'s internship')]
     public function editInternship(EditInternshipRequest $request, Internship $internship)
     {
-        $this->authorize('modify', $internship);
+        $this->authorize('access', $internship);
 
         $data = EditInternshipDTO::fromRequest($request);
 
@@ -49,7 +67,7 @@ class InternshipController extends Controller
     #[Endpoint(title: 'Delete internship', description: 'The user that has a company role can delete their own internship info and not other\'s internship')]
     public function deleteInternship(Internship $internship)
     {
-        $this->authorize('modify', $internship);
+        $this->authorize('access', $internship);
 
         $this->internshipService->deleteInternship($internship);
 
@@ -61,7 +79,7 @@ class InternshipController extends Controller
     #[Endpoint(title: 'Restore internship', description: 'The user that has a company role can restore their own internship that has been deleted not other\'s internship')]
     public function restoreInternship(Internship $internship)
     {
-        $this->authorize('modify', $internship);
+        $this->authorize('access', $internship);
 
         $this->internshipService->restoreInternship($internship);
 

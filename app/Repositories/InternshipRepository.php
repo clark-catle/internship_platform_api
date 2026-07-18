@@ -68,4 +68,13 @@ class InternshipRepository
     {
         $internship->restore();
     }
+
+    /**
+     * return all the internship of the `$company` with its skills info
+     * @return \Illuminate\Database\Eloquent\Collection<int, Internship>
+     */
+    public function companyInternship(Company $company)
+    {
+        return $company->internship()->with(['skill'])->get();
+    }
 }

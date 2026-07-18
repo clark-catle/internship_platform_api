@@ -19,7 +19,7 @@ class InternshipPolicy
      * @param Internship $internship
      * @return bool
      */
-    public function modify(User $user, Internship $internship)
+    public function access(User $user, Internship $internship)
     {
         if (!$this->companyRepo->companyExist($user))
             return false;

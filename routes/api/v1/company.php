@@ -11,6 +11,8 @@ Route::middleware(['role:company'])->prefix('company')->group(function () {
   Route::get('/getCompany', [CompanyController::class, 'getCompany'])->name('getCompany');
 
   //Internship
+  Route::get('/internship', [InternshipController::class, 'companyInternship'])->name('companyInternship');
+  Route::get('/internship/{internship}', [InternshipController::class, 'specificCompanyInternship'])->name('specificCompanyInternship');
   Route::post('/addInternship', [InternshipController::class, 'addInternship'])->name('addInternship');
   Route::put('/editInternship/{internship}', [InternshipController::class, 'editInternship'])->name('editInternship');
   Route::delete('/deleteInternship/{internship}', [InternshipController::class, 'deleteInternship'])->name('deleteInternship');
