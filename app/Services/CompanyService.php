@@ -59,13 +59,13 @@ class CompanyService
 
             $file = $this->fileService->addFile($data->logo, FileCategoryEnum::Image);
 
-            $company = $this->companyRepo->addCompany(
+            $this->companyRepo->addCompany(
                 $data,
                 $user->id,
                 $file->id
             );
 
-            return $company->load('user');
+            return $user->load('company');
         });
     }
 
@@ -98,7 +98,7 @@ class CompanyService
             if ($newFile)
                 $this->fileService->removeFileById($oldLogoId);
 
-            return $company->load('user');
+            return $user->load('company');
         });
     }
 
@@ -106,12 +106,12 @@ class CompanyService
      * returns a company info base on the passed `$user`
      * @param User $user
      * @throws ConflictHttpException
-     * @return \App\Models\Company|null
+     * @return User|null
      */
     public function getCompany(User $user)
     {
         $this->ensureCompanyExist($user);
 
-        return $user->company->setRelation('user', $user);
+        return $user->load('company');
     }
 }

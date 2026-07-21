@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\UserRoleMiddleware;
+use App\Http\Middleware\UserRoleNotAcceptedMiddleware;
 use App\Http\Middleware\UserStatusMiddleware;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
@@ -19,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'role' => UserRoleMiddleware::class,
+            'role.not' => UserRoleNotAcceptedMiddleware::class,
             'status' => UserStatusMiddleware::class
         ]);
     })

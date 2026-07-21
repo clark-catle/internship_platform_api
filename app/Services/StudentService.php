@@ -52,7 +52,7 @@ class StudentService
             if (filled($data->skills_id) || filled($data->other_skills))
                 $this->skillService->processStudentSkill($student, $data->skills_id, $data->other_skills);
 
-            return $student->load(['user', 'course', 'skill']);
+            return $user->load(['student', 'student.course', 'student.skill']);
         });
     }
 
@@ -91,7 +91,7 @@ class StudentService
             if (filled($data->skills_id) || filled($data->other_skills))
                 $this->skillService->processStudentSkill($student, $data->skills_id, $data->other_skills);
 
-            return $student->load(['user', 'course', 'skill']);
+            return $user->load(['student', 'student.course', 'student.skill']);
         });
     }
 
@@ -120,13 +120,13 @@ class StudentService
      * returns a student info base on the passed `$user`
      * @param User $user
      * @throws ConflictHttpException
-     * @return Student
+     * @return User
      */
     public function getCompany(User $user)
     {
         if (!$this->studentRepo->studentExist($user))
             throw new ConflictHttpException('User doesn\'t have a student profile yet.');
 
-        return $user->student->setRelation('user', $user);
+        return $user->load('student');
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StudentRequests\AddStudentRequest;
 use App\Http\Requests\StudentRequests\EditStudentRequest;
 use App\Http\Resources\StudentResource;
+use App\Http\Resources\UserResource;
 use App\Services\StudentService;
 use Dedoc\Scramble\Attributes\Endpoint;
 
@@ -21,11 +22,11 @@ class StudentController extends Controller
         $val = AddStudentDTO::fromRequest($request);
         $user = $request->user();
 
-        $student = $this->studentService->addStudent($val, $user);
+        $val = $this->studentService->addStudent($val, $user);
 
         return response()->json([
             'message' => 'Student info has been created successfully',
-            'information' => StudentResource::make($student)
+            'information' => UserResource::make($val)
         ]);
     }
 
@@ -35,11 +36,11 @@ class StudentController extends Controller
         $val = EditStudentDTO::fromRequest($request);
         $user = $request->user();
 
-        $student = $this->studentService->editStudent($val, $user);
+        $val = $this->studentService->editStudent($val, $user);
 
         return response()->json([
             'message' => 'Student info has been updated successfully',
-            'information' => StudentResource::make($student)
+            'information' => UserResource::make($val)
         ]);
     }
 
@@ -48,6 +49,6 @@ class StudentController extends Controller
     {
         $user = request()->user();
 
-        return StudentResource::make($this->studentService->getCompany($user));
+        return UserResource::make($this->studentService->getCompany($user));
     }
 }

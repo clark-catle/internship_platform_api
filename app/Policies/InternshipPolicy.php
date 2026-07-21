@@ -26,4 +26,6 @@ class InternshipPolicy
 
         return $user->company->id === $internship->company_id;
     }
+
+    public function notCompany(User $user) {}
 }

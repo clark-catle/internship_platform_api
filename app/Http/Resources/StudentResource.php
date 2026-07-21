@@ -15,18 +15,15 @@ class StudentResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'user' => UserResource::make($request->user()),
-            'student' => [
-                'id' => $this->id,
-                'school' => $this->school,
-                'cellphone_number' => $this->cellphone_number,
-                'course' => CourseResource::make($this->course),
-                'location' => [
-                    'region' => $this->region,
-                    'city' => $this->city,
-                ],
-                'student_skill' => SkillResource::collection($this->skill)
-            ]
+            'id' => $this->id,
+            'school' => $this->school,
+            'cellphone_number' => $this->cellphone_number,
+            'course' => CourseResource::make($this->course),
+            'location' => [
+                'region' => $this->region,
+                'city' => $this->city,
+            ],
+            'student_skill' => SkillResource::collection($this->skill)
         ];
     }
 }

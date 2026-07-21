@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enum\User\UserRoleEnum;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,6 +20,14 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'status' => $this->status->value,
             'role' => $this->role,
+            'company_info' => $this->when(
+                $request->user()->role === UserRoleEnum::Company,
+                CompanyResource::make($this->company)
+            ),
+            'student_info' => $this->when(
+                $request->user()->role === UserRoleEnum::Student,
+                StudentResource::make($this->student)
+            ),
         ];
     }
 }

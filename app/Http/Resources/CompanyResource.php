@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enum\User\UserRoleEnum;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,17 +16,14 @@ class CompanyResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'user' => UserResource::make($request->user()),
-            'company' => [
-                'id' => $this->id,
-                'company_name' => $this->company_name,
-                'description' => $this->description,
-                'website' => $this->website,
-                'is_verified' => $this->is_verified,
-                'location' => [
-                    'region' => $this->region,
-                    'city' => $this->city,
-                ]
+            'id' => $this->id,
+            'company_name' => $this->company_name,
+            'description' => $this->description,
+            'website' => $this->website,
+            'is_verified' => $this->is_verified,
+            'location' => [
+                'region' => $this->region,
+                'city' => $this->city,
             ]
         ];
     }

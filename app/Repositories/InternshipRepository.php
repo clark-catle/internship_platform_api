@@ -77,4 +77,13 @@ class InternshipRepository
     {
         return $company->internship()->with(['skill'])->get();
     }
+
+    /**
+     * return all of the internship with skills info
+     * @return \Illuminate\Database\Eloquent\Collection<int, Internship>|\Illuminate\Support\Collection<int, \stdClass>
+     */
+    public function viewInternship()
+    {
+        return Internship::with(['skill', 'company'])->get();
+    }
 }

@@ -32,6 +32,11 @@ class InternshipService
         return $this->internshipRepo->companyInternship($user->company);
     }
 
+    public function viewInternship()
+    {
+        return $this->internshipRepo->viewInternship();
+    }
+
     /**
      * creates an internship info then returning it 
      * base on the passed value of `$data`
