@@ -9,7 +9,9 @@ use App\Http\Requests\CompanyRequests\AddCompanyRequest;
 use App\Http\Requests\CompanyRequests\EditCompanyRequest;
 use App\Http\Resources\CompanyResource;
 use App\Http\Resources\UserResource;
+use App\Models\Company;
 use App\Services\CompanyService;
+use App\Services\FileService;
 use Dedoc\Scramble\Attributes\Endpoint;
 
 /**
@@ -19,6 +21,7 @@ class CompanyController extends Controller
 {
     public function __construct(
         private CompanyService $companyService,
+        private FileService $fileService
     ) {}
 
     #[Endpoint(title: 'Add Company Info', description: 'The user that has company role can add their info about their company')]
@@ -56,5 +59,11 @@ class CompanyController extends Controller
         $user = request()->user();
 
         return UserResource::make($this->companyService->getCompany($user));
+    }
+
+    #[Endpoint(title: 'Get company logo', description: 'The user can request the logo of the company buy just passing the company id')]
+    public function getCompanyLogo(Company $company)
+    {
+        return $this->fileService->getCompanyLogo($company->logo);
     }
 }

@@ -10,5 +10,5 @@ Route::middleware(['role:student'])->prefix('student')->group(function () {
   Route::get('/getStudent', [StudentController::class, 'getStudent'])->name('getStudent');
 
   //apply
-  Route::post('/internship/{internship}/apply', [ApplicationController::class, 'applyInternship'])->name('addStudent');
+  Route::post('/internship/{internship}/apply', [ApplicationController::class, 'applyInternship'])->name('applyInternship');
 });

@@ -8,15 +8,23 @@ use App\Http\Resources\ApplicationResource;
 use App\Models\Application;
 use App\Models\Internship;
 use App\Services\ApplicationService;
+use App\Services\FileService;
+use Dedoc\Scramble\Attributes\Endpoint;
 use Illuminate\Http\Request;
+use Laravel\Boost\Install\ThirdPartyPackage;
 
+/**
+ * @tags Application
+ */
 class ApplicationController extends Controller
 {
 
     public function __construct(
-        private ApplicationService $applicationService
+        private ApplicationService $applicationService,
+        private FileService $fileService
     ) {}
 
+    #[Endpoint(title: 'Student Apply', description: 'The user that is a student can apply to an internship once. The user can either pass a specific resume or not, if there\'s no passed resume, it will used its stored resume of student')]
     public function applyInternship(ApplyInternshipRequest $request, Internship $internship)
     {
         $this->authorize('apply', Application::class);
@@ -29,5 +37,13 @@ class ApplicationController extends Controller
             'message' => 'Applied successfully!',
             'application' => ApplicationResource::make($application)
         ]);
+    }
+
+    #[Endpoint(title: 'View resume of internship application', description: 'The user can view the resume of the application, if the user is student, its validate where it can only access the applied internship of the student, then if the user is a company, its validated by checking if the posted internship owner of the application is the company')]
+    public function viewApplicationResume(Application $application)
+    {
+        $this->authorize('ownApplication', $application);
+
+        return $this->fileService->getCompanyLogo($application->resume);
     }
 }

@@ -9,11 +9,5 @@ use Dedoc\Scramble\Attributes\Endpoint;
 
 class FileController extends Controller
 {
-    public function __construct(private FileService $fileService) {}
-
-    #[Endpoint(title: 'Get company logo', description: 'The user can request the logo of the company buy just passing the company id')]
-    public function getCompanyLogo(Company $company)
-    {
-        return $this->fileService->getCompanyLogo($company);
-    }
+    public function __construct() {}
 }

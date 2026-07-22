@@ -41,28 +41,27 @@ class FileService
     }
 
     /**
-     * retrieving the company logo base on the 
-     * info of `$company` then returning it
-     * @param Company $company
+     * retrieving the `$file` info in the storage then returning a stream response
+     * @param File $file
      * @throws NotFoundHttpException
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
-    public function getCompanyLogo(Company $company)
+    public function getCompanyLogo(File $file)
     {
-        $logo = $company->logo;
+        $file_name = Str::ucfirst($file ? $file->category : 'file');
 
-        if (!$logo)
-            throw new NotFoundHttpException('Image not found.');
+        if (!$file)
+            throw new NotFoundHttpException("$file_name not found.");
 
-        $contents = $this->fileRepo->getFileContent($logo);
+        $contents = $this->fileRepo->getFileContent($file);
 
-        if (!$contents)
-            throw new NotFoundHttpException('Image file not found in storage.');
+        if (!$file)
+            throw new NotFoundHttpException("$file_name not found in storage.");
 
         return response()->stream(function () use ($contents) {
             echo $contents;
         }, 200, [
-            'Content-Type'  => $logo->mime_type->value,
+            'Content-Type'  => $file->mime_type->value,
             'Cache-Control' => 'private, max-age=3600',
         ]);
     }
