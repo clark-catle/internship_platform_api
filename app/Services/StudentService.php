@@ -129,4 +129,16 @@ class StudentService
 
         return $user->load('student');
     }
+
+    /**
+     * ensure that the `$student` has a resume, if not will throw an error
+     * @param Student $student
+     * @throws ConflictHttpException
+     * @return void
+     */
+    public function ensureResumeExist(Student $student)
+    {
+        if (!$this->studentRepo->studentResumeExist($student))
+            throw new ConflictHttpException('Student doesn\'t have a resume yet.');
+    }
 }

@@ -25,6 +25,16 @@ class StudentRepository
     }
 
     /**
+     * checks if the `$student` already has a resume
+     * @param Student $student
+     * @return bool
+     */
+    public function studentResumeExist(Student $student)
+    {
+        return $student->resume()->exists();
+    }
+
+    /**
      * creating a new student base on the passed
      * parameter value then returning it
      * @param AddStudentDTO $data
