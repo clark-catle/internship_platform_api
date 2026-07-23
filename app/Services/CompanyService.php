@@ -114,4 +114,16 @@ class CompanyService
 
         return $user->load('company');
     }
+
+    /**
+     * return the logo of the company `$user` by checking first if the user has a company info
+     * @param User $user
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function getLogo(User $user)
+    {
+        $this->ensureCompanyExist($user);
+
+        return $this->fileService->getFile($user->company->logo);
+    }
 }

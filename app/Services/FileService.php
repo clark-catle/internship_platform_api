@@ -46,9 +46,9 @@ class FileService
      * @throws NotFoundHttpException
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
-    public function getCompanyLogo(File $file)
+    public function getFile(File $file)
     {
-        $file_name = Str::ucfirst($file ? $file->category : 'file');
+        $file_name = Str::ucfirst($file ? $file->category->value : 'file');
 
         if (!$file)
             throw new NotFoundHttpException("$file_name not found.");

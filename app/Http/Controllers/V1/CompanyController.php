@@ -61,9 +61,15 @@ class CompanyController extends Controller
         return UserResource::make($this->companyService->getCompany($user));
     }
 
-    #[Endpoint(title: 'Get company logo', description: 'The user can request the logo of the company buy just passing the company id')]
+    #[Endpoint(title: 'Get company logo', description: 'The user that isnt a company user can request the company logo (might be because viewing of internship)')]
     public function getCompanyLogo(Company $company)
     {
-        return $this->fileService->getCompanyLogo($company->logo);
+        return $this->fileService->getFile($company->logo);
+    }
+
+    #[Endpoint(title: 'Get own company logo', description: 'The user that is a company user can get their ownt logo')]
+    public function getLogo()
+    {
+        return $this->companyService->getLogo(request()->user());
     }
 }

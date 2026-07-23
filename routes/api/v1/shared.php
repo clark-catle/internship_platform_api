@@ -7,10 +7,8 @@ use App\Http\Controllers\V1\InternshipController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('role.not:company')->group(function () {
-  // File
-  Route::prefix('file')->group(function () {
-    Route::get('/company/{company}/logo', [CompanyController::class, 'getCompanyLogo'])->name('logo_company');
-  });
+  // View logo of the company
+  Route::get('/company/{company}/logo', [CompanyController::class, 'getCompanyLogo'])->name('logo_company');
 
   // Internship
   Route::prefix('internship')->group(function () {

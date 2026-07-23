@@ -9,6 +9,7 @@ Route::middleware(['role:company'])->prefix('company')->group(function () {
   Route::post('/addCompany', [CompanyController::class, 'addCompany'])->name('addCompany');
   Route::put('/editCompany', [CompanyController::class, 'editCompany'])->name('editCompany');
   Route::get('/getCompany', [CompanyController::class, 'getCompany'])->name('getCompany');
+  Route::get('/getLogo', [CompanyController::class, 'getLogo'])->name('getLogo');
 
   //Internship
   Route::get('/internship', [InternshipController::class, 'companyInternship'])->name('companyInternship');

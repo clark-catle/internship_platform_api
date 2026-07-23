@@ -42,8 +42,8 @@ class ApplicationController extends Controller
     #[Endpoint(title: 'View resume of internship application', description: 'The user can view the resume of the application, if the user is student, its validate where it can only access the applied internship of the student, then if the user is a company, its validated by checking if the posted internship owner of the application is the company')]
     public function viewApplicationResume(Application $application)
     {
-        $this->authorize('ownApplication', $application);
+        $this->authorize('viewResumeApplication', $application);
 
-        return $this->fileService->getCompanyLogo($application->resume);
+        return $this->fileService->getFile($application->resume);
     }
 }
