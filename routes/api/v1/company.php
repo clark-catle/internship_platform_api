@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\V1\ApplicationController;
 use App\Http\Controllers\V1\CompanyController;
 use App\Http\Controllers\V1\InternshipController;
 use Illuminate\Support\Facades\Route;
@@ -18,4 +19,9 @@ Route::middleware(['role:company'])->prefix('company')->group(function () {
   Route::put('/editInternship/{internship}', [InternshipController::class, 'editInternship'])->name('editInternship');
   Route::delete('/deleteInternship/{internship}', [InternshipController::class, 'deleteInternship'])->name('deleteInternship');
   Route::put('/restoreInternship/{internship}', [InternshipController::class, 'restoreInternship'])->name('restoreInternship')->withTrashed();
+
+  //Application
+  Route::prefix('application')->group(function () {
+    Route::get('{application}/interview', [ApplicationController::class, 'interviewApplication'])->name('interviewApplication');
+  });
 });

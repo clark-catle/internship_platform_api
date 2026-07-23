@@ -44,13 +44,25 @@ class ApplicationPolicy
                 return $user->student->id === $application->student_id;
 
             case UserRoleEnum::Company: // check if the posted internship in the application owner is the user
-                if (!$user->company)
-                    return false;
-
-                return $user->company->id === $application->internship->company_id;
+                return $this->companyAccessApplication($user, $application);
 
             default: // return false by default because there's nothing to check
                 return false;
         }
+    }
+
+    /**
+     * check if the `$user` has a company info and check if the company
+     * owns the internship that was connected to the `$aplication`
+     * @param User $user
+     * @param Application $application
+     * @return bool
+     */
+    public function companyAccessApplication(User $user, Application $application)
+    {
+        if (!$user->company)
+            return false;
+
+        return $user->company->id === $application->internship->company_id;
     }
 }

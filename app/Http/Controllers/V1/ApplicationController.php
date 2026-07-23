@@ -56,4 +56,11 @@ class ApplicationController extends Controller
 
         return $this->fileService->getFile($application->resume);
     }
+
+    public function interviewApplication(Application $application)
+    {
+        $this->authorize('companyAccessApplication', $application);
+
+        return;
+    }
 }

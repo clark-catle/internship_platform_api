@@ -121,4 +121,13 @@ class ApplicationService
         if ($application->status === ApplicationStatusEnum::Rejected)
             throw new Exception('Application already rejeted!');
     }
+
+    public function interviewApplication(Application $application)
+    {
+        $this->ensureApplicationNotRejected($application);
+
+        proceed with the interview if after seen, its accepted
+    }
+
+    another function for reconsideration where it will remove the reject just to proceed to the next stage
 }
