@@ -26,7 +26,7 @@ class InternshipResource extends JsonResource
             'duration' => $this->duration,
             'duration_unit' => $this->duration_unit->value,
             'internship_skill' => SkillResource::collection($this->skill),
-            'company' => CompanyResource::make($this->company),
+            'company' => $this->whenLoaded('company'),
         ];
     }
 }

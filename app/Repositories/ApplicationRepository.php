@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+use App\Enum\Application\ApplicationProgressEnum;
+use App\Enum\Application\ApplicationStatusEnum;
 use App\Models\Application;
 
 class ApplicationRepository
@@ -39,5 +41,31 @@ class ApplicationRepository
     {
         return Application::where('student_id', $stundent_id)
             ->where('internship_id', $internship_id)->exists();
+    }
+
+    /**
+     * updates the status of `$application` base on the passed `$status`
+     * @param Application $application
+     * @param ApplicationStatusEnum $status
+     * @return Application
+     */
+    public function updateApplicationStatus(Application $application, ApplicationStatusEnum $status)
+    {
+        $application->update(['status' => $status]);
+
+        return $application;
+    }
+
+    /**
+     * updates the progress of `$application` base on the passed `$progress`
+     * @param Application $application
+     * @param ApplicationProgressEnum $progress
+     * @return Application
+     */
+    public function updateApplicationProgress(Application $application, ApplicationProgressEnum $progress)
+    {
+        $application->update(['progress' => $progress]);
+
+        return $application;
     }
 }

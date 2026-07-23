@@ -17,5 +17,8 @@ Route::middleware('role.not:company')->group(function () {
   });
 });
 
-// Uploaded resume of the internship
-Route::get('/apply/{application}/resume', [ApplicationController::class, 'viewApplicationResume'])->name('viewApplicationResume');
+// Application of internship
+Route::prefix('application')->group(function () {
+  Route::get('{application}', [ApplicationController::class, 'viewApplication'])->name('viewApplication');
+  Route::get('{application}/resume', [ApplicationController::class, 'viewApplicationResume'])->name('viewApplicationResume');
+});

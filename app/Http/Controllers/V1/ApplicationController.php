@@ -39,6 +39,16 @@ class ApplicationController extends Controller
         ]);
     }
 
+    #[Endpoint(title: 'View internship application', description: 'The user can view the application, if the user is a student, it can only see its own application, but if the user is a company, it can only see its only see the application that was connected to its posted internship and the application that was seen, its status will be updated into in review')]
+    public function viewApplication(Application $application)
+    {
+        $this->authorize('viewResumeApplication', $application);
+
+        $application = $this->applicationService->viewApplication($application, request()->user()->role);
+
+        return ApplicationResource::make($application);
+    }
+
     #[Endpoint(title: 'View resume of internship application', description: 'The user can view the resume of the application, if the user is student, its validate where it can only access the applied internship of the student, then if the user is a company, its validated by checking if the posted internship owner of the application is the company')]
     public function viewApplicationResume(Application $application)
     {
