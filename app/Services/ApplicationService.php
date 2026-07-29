@@ -6,6 +6,7 @@ use App\Enum\Application\ApplicationProgressEnum;
 use App\Enum\Application\ApplicationStatusEnum;
 use App\Enum\File\FileCategoryEnum;
 use App\Enum\User\UserRoleEnum;
+use App\Jobs\ApplicationJobs\ApplicationDecisionStageMailJob;
 use App\Jobs\ApplicationJobs\ApplicationInterviewMailJob;
 use App\Jobs\ApplicationJobs\NewApplyMailJob;
 use App\Jobs\ApplicationJobs\ApplicationInreviewMailJob;
@@ -181,6 +182,8 @@ class ApplicationService
             throw new Exception('The application is already in the final decision stage!');
 
         $this->applicationRepo->updateApplicationProgress($application, ApplicationProgressEnum::Decision);
+
+        ApplicationDecisionStageMailJob::dispatch($application);
 
         return $application->load([
             'student',
