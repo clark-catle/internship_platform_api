@@ -89,13 +89,21 @@ class ApplicationController extends Controller
         $this->applicationService->acceptApplication($application);
 
         return response()->json([
-            'message' => 'Application was accepted!',
+            'message' => 'Application was accepted successfuly!',
             'application' => ApplicationResource::make($application)
         ]);
     }
 
+    #[Endpoint(title: 'Reject application', description: 'The company user can mark the application as rejected by first making sure the application status isnt rejected yet and not accepted, after this it will make the status of the application into rejected')]
     public function rejectApplication(Application $application)
     {
         $this->authorize('companyAccessApplication', $application);
+
+        $this->applicationService->rejectApplication($application);
+
+        return response()->json([
+            'message' => 'Application was rejected successfully!',
+            'application' => ApplicationResource::make($application)
+        ]);
     }
 }

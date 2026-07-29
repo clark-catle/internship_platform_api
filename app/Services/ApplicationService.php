@@ -120,7 +120,7 @@ class ApplicationService
     private function ensureApplicationNotRejected(Application $application)
     {
         if ($application->status === ApplicationStatusEnum::Rejected)
-            throw new Exception('Application already rejeted!');
+            throw new Exception('The application has been already rejected!');
     }
 
     /**
@@ -182,6 +182,19 @@ class ApplicationService
     }
 
     /**
+     * ensure the `$application` isnt accepted yet by throwing
+     * an exception if the `$application` status is accepted
+     * @param Application $application
+     * @throws Exception
+     * @return void
+     */
+    private function ensureApplicationNotAccepted(Application $application)
+    {
+        if ($application->status === ApplicationStatusEnum::Accepted)
+            throw new Exception('The application has been already accepted!');
+    }
+
+    /**
      * accept the `$application` by checking if its not rejected and 
      * its progress is decision, after the checks it will proceed with
      * the change of the `$application` status into accepted
@@ -196,10 +209,33 @@ class ApplicationService
         if ($application->progress !== ApplicationProgressEnum::Decision)
             throw new Exception('The application must be in the decision stage before it can be marked as accepted!');
 
-        if ($application->status === ApplicationStatusEnum::Accepted)
-            throw new Exception('The application has been already accepted!');
+        $this->ensureApplicationNotAccepted($application);
 
         $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::Accepted);
+
+        return $application->load([
+            'student',
+            'student.course',
+            'student.skill',
+            'internship',
+            'internship.skill'
+        ]);
+    }
+
+    /**
+     * reject the `$application` by checking first if the 
+     * `$application` is not rejected and not accepted, after 
+     * that it will update the `$application` status into rejected
+     * @param Application $application
+     * @return Application
+     */
+    public function rejectApplication(Application $application)
+    {
+        $this->ensureApplicationNotRejected($application);
+
+        $this->ensureApplicationNotAccepted($application);
+
+        $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::Rejected);
 
         return $application->load([
             'student',
