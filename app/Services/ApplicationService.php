@@ -11,6 +11,8 @@ use App\Jobs\ApplicationJobs\ApplicationAcceptedMailJob;
 use App\Jobs\ApplicationJobs\ApplicationInterviewMailJob;
 use App\Jobs\ApplicationJobs\NewApplyMailJob;
 use App\Jobs\ApplicationJobs\ApplicationInreviewMailJob;
+use App\Jobs\ApplicationJobs\ApplicationRejectedMailJob;
+use App\Jobs\ApplicationJobs\RevertRejectedApplicationMailJob;
 use App\Models\Application;
 use App\Models\Internship;
 use App\Models\Student;
@@ -260,6 +262,8 @@ class ApplicationService
 
             $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::Rejected);
 
+            ApplicationRejectedMailJob::dispatch($application);
+
             return $application->load([
                 'student',
                 'student.course',
@@ -285,6 +289,8 @@ class ApplicationService
                 throw new Exception("The application isn't rejected!");
 
             $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::InReview);
+
+            RevertRejectedApplicationMailJob::dispatch($application);
 
             return $application->load([
                 'student',
