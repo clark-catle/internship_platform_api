@@ -34,9 +34,10 @@ class ApplicationDecisionStageMailJob implements ShouldQueue
 
         $studentUser = $application->student->user;
 
+        // Mail::to($studentUser->email)->send(new StudentApplicationDecisionStageMail($studentUser));
+
         Log::info('Sending decision stage email to student application!');
         Log::info($studentUser);
-        // Mail::to($studentUser->email)->send(new StudentApplicationDecisionStageMail($studentUser));
     }
 
     public function failed($exception = null)

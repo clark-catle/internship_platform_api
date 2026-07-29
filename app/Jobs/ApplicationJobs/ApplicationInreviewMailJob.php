@@ -33,9 +33,10 @@ class ApplicationInreviewMailJob implements ShouldQueue
 
         $studentUser = $application->student->user;
 
+        // Mail::to($studentUser->email)->send(new StudentInreviewMail($studentUser));
+
         Log::info('Sending in review email of student application!');
         Log::info($studentUser);
-        // Mail::to($studentUser->email)->send(new StudentInreviewMail($studentUser));
     }
 
     public function failed($exception = null)

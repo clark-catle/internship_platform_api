@@ -7,6 +7,7 @@ use App\Enum\Application\ApplicationStatusEnum;
 use App\Enum\File\FileCategoryEnum;
 use App\Enum\User\UserRoleEnum;
 use App\Jobs\ApplicationJobs\ApplicationDecisionStageMailJob;
+use App\Jobs\ApplicationJobs\ApplicationAcceptedMailJob;
 use App\Jobs\ApplicationJobs\ApplicationInterviewMailJob;
 use App\Jobs\ApplicationJobs\NewApplyMailJob;
 use App\Jobs\ApplicationJobs\ApplicationInreviewMailJob;
@@ -142,25 +143,27 @@ class ApplicationService
      */
     public function interviewApplication(Application $application)
     {
-        $this->ensureApplicationNotRejected($application);
+        return DB::transaction(function () use ($application) {
+            $this->ensureApplicationNotRejected($application);
 
-        // ensure the progress is "applied" to proceed
-        if ($application->progress === ApplicationProgressEnum::Interview)
-            throw new Exception('The application has already been advanced to the interview stage!');
-        else if ($application->progress === ApplicationProgressEnum::Decision)
-            throw new Exception('The application interview is already completed!');
+            // ensure the progress is "applied" to proceed
+            if ($application->progress === ApplicationProgressEnum::Interview)
+                throw new Exception('The application has already been advanced to the interview stage!');
+            else if ($application->progress === ApplicationProgressEnum::Decision)
+                throw new Exception('The application interview is already completed!');
 
-        $this->applicationRepo->updateApplicationProgress($application, ApplicationProgressEnum::Interview);
+            $this->applicationRepo->updateApplicationProgress($application, ApplicationProgressEnum::Interview);
 
-        ApplicationInterviewMailJob::dispatch($application);
+            ApplicationInterviewMailJob::dispatch($application);
 
-        return $application->load([
-            'student',
-            'student.course',
-            'student.skill',
-            'internship',
-            'internship.skill'
-        ]);
+            return $application->load([
+                'student',
+                'student.course',
+                'student.skill',
+                'internship',
+                'internship.skill'
+            ]);
+        });
     }
 
     /**
@@ -173,25 +176,27 @@ class ApplicationService
      */
     public function decideApplication(Application $application)
     {
-        $this->ensureApplicationNotRejected($application);
+        return DB::transaction(function () use ($application) {
+            $this->ensureApplicationNotRejected($application);
 
-        // ensure the progress is "interview" to proceed
-        if ($application->progress === ApplicationProgressEnum::Applied)
-            throw new Exception('The application should complete interview stage first!');
-        else if ($application->progress === ApplicationProgressEnum::Decision)
-            throw new Exception('The application is already in the final decision stage!');
+            // ensure the progress is "interview" to proceed
+            if ($application->progress === ApplicationProgressEnum::Applied)
+                throw new Exception('The application should complete interview stage first!');
+            else if ($application->progress === ApplicationProgressEnum::Decision)
+                throw new Exception('The application is already in the final decision stage!');
 
-        $this->applicationRepo->updateApplicationProgress($application, ApplicationProgressEnum::Decision);
+            $this->applicationRepo->updateApplicationProgress($application, ApplicationProgressEnum::Decision);
 
-        ApplicationDecisionStageMailJob::dispatch($application);
+            ApplicationDecisionStageMailJob::dispatch($application);
 
-        return $application->load([
-            'student',
-            'student.course',
-            'student.skill',
-            'internship',
-            'internship.skill'
-        ]);
+            return $application->load([
+                'student',
+                'student.course',
+                'student.skill',
+                'internship',
+                'internship.skill'
+            ]);
+        });
     }
 
     /**
@@ -217,22 +222,26 @@ class ApplicationService
      */
     public function acceptApplication(Application $application)
     {
-        $this->ensureApplicationNotRejected($application);
+        return DB::transaction(function () use ($application) {
+            $this->ensureApplicationNotRejected($application);
 
-        if ($application->progress !== ApplicationProgressEnum::Decision)
-            throw new Exception('The application must be in the decision stage before it can be marked as accepted!');
+            if ($application->progress !== ApplicationProgressEnum::Decision)
+                throw new Exception('The application must be in the decision stage before it can be marked as accepted!');
 
-        $this->ensureApplicationNotAccepted($application);
+            $this->ensureApplicationNotAccepted($application);
 
-        $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::Accepted);
+            $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::Accepted);
 
-        return $application->load([
-            'student',
-            'student.course',
-            'student.skill',
-            'internship',
-            'internship.skill'
-        ]);
+            ApplicationAcceptedMailJob::dispatch($application);
+
+            return $application->load([
+                'student',
+                'student.course',
+                'student.skill',
+                'internship',
+                'internship.skill'
+            ]);
+        });
     }
 
     /**
@@ -244,19 +253,21 @@ class ApplicationService
      */
     public function rejectApplication(Application $application)
     {
-        $this->ensureApplicationNotRejected($application);
+        return DB::transaction(function () use ($application) {
+            $this->ensureApplicationNotRejected($application);
 
-        $this->ensureApplicationNotAccepted($application);
+            $this->ensureApplicationNotAccepted($application);
 
-        $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::Rejected);
+            $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::Rejected);
 
-        return $application->load([
-            'student',
-            'student.course',
-            'student.skill',
-            'internship',
-            'internship.skill'
-        ]);
+            return $application->load([
+                'student',
+                'student.course',
+                'student.skill',
+                'internship',
+                'internship.skill'
+            ]);
+        });
     }
 
     /**
@@ -267,19 +278,21 @@ class ApplicationService
      */
     public function revertRejectApplication(Application $application)
     {
-        $this->ensureApplicationNotAccepted($application);
+        return DB::transaction(function () use ($application) {
+            $this->ensureApplicationNotAccepted($application);
 
-        if ($application->status !== ApplicationStatusEnum::Rejected)
-            throw new Exception("The application isn't rejected!");
+            if ($application->status !== ApplicationStatusEnum::Rejected)
+                throw new Exception("The application isn't rejected!");
 
-        $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::InReview);
+            $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::InReview);
 
-        return $application->load([
-            'student',
-            'student.course',
-            'student.skill',
-            'internship',
-            'internship.skill'
-        ]);
+            return $application->load([
+                'student',
+                'student.course',
+                'student.skill',
+                'internship',
+                'internship.skill'
+            ]);
+        });
     }
 }

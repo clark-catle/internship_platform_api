@@ -34,9 +34,10 @@ class ApplicationInterviewMailJob implements ShouldQueue
 
         $studentUser = $application->student->user;
 
+        // Mail::to($studentUser->email)->send(new StudentInterviewMail($studentUser));
+
         Log::info('Sending interview email to student application!');
         Log::info($studentUser);
-        // Mail::to($studentUser->email)->send(new StudentInterviewMail($studentUser));
     }
 
     public function failed($exception = null)
