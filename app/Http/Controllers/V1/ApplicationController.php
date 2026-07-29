@@ -10,8 +10,6 @@ use App\Models\Internship;
 use App\Services\ApplicationService;
 use App\Services\FileService;
 use Dedoc\Scramble\Attributes\Endpoint;
-use Illuminate\Http\Request;
-use Laravel\Boost\Install\ThirdPartyPackage;
 
 /**
  * @tags Application
@@ -57,10 +55,47 @@ class ApplicationController extends Controller
         return $this->fileService->getFile($application->resume);
     }
 
+    #[Endpoint(title: 'Interview Stage Application', description: 'The company user can interview the application, by first making sure the application isnt rejected and its progress is a applied to make sure the application inst interviewed yet, after this it will make the progress of the application into interview')]
     public function interviewApplication(Application $application)
     {
         $this->authorize('companyAccessApplication', $application);
 
-        return;
+        $this->applicationService->interviewApplication($application);
+
+        return response()->json([
+            'message' => 'Successfully moved the application into interview stage!',
+            'application' => ApplicationResource::make($application)
+        ]);
+    }
+
+    #[Endpoint(title: 'Decide Stage Application', description: 'The company user can mark the application as deciding stage by first making sure the application isnt rejected and its progress is a interview to make sure the application is already interviewed, after this it will make the progress of the application into decision')]
+    public function decideApplication(Application $application)
+    {
+        $this->authorize('companyAccessApplication', $application);
+
+        $this->applicationService->decideApplication($application);
+
+        return response()->json([
+            'message' => 'Successfully moved the application into decision stage!',
+            'application' => ApplicationResource::make($application)
+        ]);
+    }
+
+    #[Endpoint(title: 'Accept application', description: 'The company user can mark the application as accepted by first making sure the application isnt rejected and its progress is already in decision stage, after this it will make the status of the application into accepted')]
+    public function acceptApplication(Application $application)
+    {
+        $this->authorize('companyAccessApplication', $application);
+
+        $this->applicationService->acceptApplication($application);
+
+        return response()->json([
+            'message' => 'Application was accepted!',
+            'application' => ApplicationResource::make($application)
+        ]);
+    }
+
+    public function rejectApplication(Application $application)
+    {
+        $this->authorize('companyAccessApplication', $application);
     }
 }

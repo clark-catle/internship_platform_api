@@ -22,6 +22,9 @@ Route::middleware(['role:company'])->prefix('company')->group(function () {
 
   //Application
   Route::prefix('application')->group(function () {
-    Route::get('{application}/interview', [ApplicationController::class, 'interviewApplication'])->name('interviewApplication');
+    Route::put('{application}/interview', [ApplicationController::class, 'interviewApplication'])->name('interviewApplication');
+    Route::put('{application}/decide', [ApplicationController::class, 'decideApplication'])->name('decideApplication');
+    Route::put('{application}/accept', [ApplicationController::class, 'acceptApplication'])->name('acceptApplication');
+    Route::put('{application}/reject', [ApplicationController::class, 'rejectApplication'])->name('rejectApplication');
   });
 });
