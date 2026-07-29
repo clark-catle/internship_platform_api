@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\DTOs\Auth\LoginDTO;
 use App\DTOs\Auth\RegisterDTO;
-use App\Jobs\AuthJobs\SendWelcomeEmailJob;
+use App\Jobs\AuthJobs\SendWelcomeMailJob;
 use App\Repositories\AuthRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +28,7 @@ class AuthService
         return DB::transaction(function () use ($data) {
             $newUser = $this->authRepo->create($data);
 
-            SendWelcomeEmailJob::dispatch($newUser);
+            SendWelcomeMailJob::dispatch($newUser);
 
             return $newUser;
         });

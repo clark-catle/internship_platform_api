@@ -6,7 +6,8 @@ use App\Enum\Application\ApplicationProgressEnum;
 use App\Enum\Application\ApplicationStatusEnum;
 use App\Enum\File\FileCategoryEnum;
 use App\Enum\User\UserRoleEnum;
-use App\Jobs\ApplicationJobs\NewApplyEmailJob;
+use App\Jobs\ApplicationJobs\NewApplyMailJob;
+use App\Jobs\ApplicationJobs\StudentInreviewEmailJob;
 use App\Models\Application;
 use App\Models\Internship;
 use App\Models\Student;
@@ -51,7 +52,7 @@ class ApplicationService
 
             $application = $this->applicationRepo->applyInternship($student->id, $resume_id, $internship->id);
 
-            NewApplyEmailJob::dispatch($application);
+            NewApplyMailJob::dispatch($application);
 
             return $application->load(['internship', 'internship.company', 'internship.skill'])->refresh();
         });
@@ -101,8 +102,11 @@ class ApplicationService
     private function companyViewApplication(Application $application)
     {
         return DB::transaction(function () use ($application) {
-            if ($application->status === ApplicationStatusEnum::Pending)
+            if ($application->status === ApplicationStatusEnum::Pending) {
                 $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::InReview);
+
+                StudentInreviewEmailJob::dispatch($application);
+            }
 
             return $application->load([
                 'student',
