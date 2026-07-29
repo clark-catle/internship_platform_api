@@ -6,8 +6,9 @@ use App\Enum\Application\ApplicationProgressEnum;
 use App\Enum\Application\ApplicationStatusEnum;
 use App\Enum\File\FileCategoryEnum;
 use App\Enum\User\UserRoleEnum;
+use App\Jobs\ApplicationJobs\ApplicationInterviewMailJob;
 use App\Jobs\ApplicationJobs\NewApplyMailJob;
-use App\Jobs\ApplicationJobs\StudentInreviewEmailJob;
+use App\Jobs\ApplicationJobs\ApplicationInreviewMailJob;
 use App\Models\Application;
 use App\Models\Internship;
 use App\Models\Student;
@@ -105,7 +106,7 @@ class ApplicationService
             if ($application->status === ApplicationStatusEnum::Pending) {
                 $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::InReview);
 
-                StudentInreviewEmailJob::dispatch($application);
+                ApplicationInreviewMailJob::dispatch($application);
             }
 
             return $application->load([
@@ -149,6 +150,8 @@ class ApplicationService
             throw new Exception('The application interview is already completed!');
 
         $this->applicationRepo->updateApplicationProgress($application, ApplicationProgressEnum::Interview);
+
+        ApplicationInterviewMailJob::dispatch($application);
 
         return $application->load([
             'student',

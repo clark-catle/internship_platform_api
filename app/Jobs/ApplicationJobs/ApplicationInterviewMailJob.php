@@ -2,7 +2,7 @@
 
 namespace App\Jobs\ApplicationJobs;
 
-use App\Mail\ApplicationMails\StudentInreviewMail;
+use App\Mail\ApplicationMails\StudentInterviewMail;
 use App\Models\Application;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class StudentInreviewEmailJob implements ShouldQueue
+class ApplicationInterviewMailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -34,13 +34,13 @@ class StudentInreviewEmailJob implements ShouldQueue
 
         $studentUser = $application->student->user;
 
-        Log::info('Sending in review email of student application!');
+        Log::info('Sending interview email to student application!');
         Log::info($studentUser);
-        // Mail::to($studentUser->email)->send(new StudentInreviewMail($studentUser));
+        // Mail::to($studentUser->email)->send(new StudentInterviewMail($studentUser));
     }
 
     public function failed($exception = null)
     {
-        Log::info('Sending in review email of student application failed!');
+        Log::info('Sending interview email to student application failed!');
     }
 }
