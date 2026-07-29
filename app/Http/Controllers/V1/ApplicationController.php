@@ -5,6 +5,7 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApplicationRequests\ApplyInternshipRequest;
 use App\Http\Resources\ApplicationResource;
+use App\Jobs\ApplicationJobs\NewApplyEmailJob;
 use App\Models\Application;
 use App\Models\Internship;
 use App\Services\ApplicationService;
@@ -107,6 +108,7 @@ class ApplicationController extends Controller
         ]);
     }
 
+    #[Endpoint(title: 'Revert Rejected application', description: 'The company user can revert the rejected application by first making sure the application status isnt accepted, after this it will make the status of the application into in review')]
     public function revertRejectApplication(Application $application)
     {
         $this->authorize('companyAccessApplication', $application);

@@ -6,6 +6,7 @@ use App\Enum\Application\ApplicationProgressEnum;
 use App\Enum\Application\ApplicationStatusEnum;
 use App\Enum\File\FileCategoryEnum;
 use App\Enum\User\UserRoleEnum;
+use App\Jobs\ApplicationJobs\NewApplyEmailJob;
 use App\Models\Application;
 use App\Models\Internship;
 use App\Models\Student;
@@ -49,6 +50,8 @@ class ApplicationService
                 $this->fileService->addFile($file, FileCategoryEnum::File)->id : $student->resume_id;
 
             $application = $this->applicationRepo->applyInternship($student->id, $resume_id, $internship->id);
+
+            NewApplyEmailJob::dispatch($application);
 
             return $application->load(['internship', 'internship.company', 'internship.skill'])->refresh();
         });
