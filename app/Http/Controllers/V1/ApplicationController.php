@@ -106,4 +106,16 @@ class ApplicationController extends Controller
             'application' => ApplicationResource::make($application)
         ]);
     }
+
+    public function revertRejectApplication(Application $application)
+    {
+        $this->authorize('companyAccessApplication', $application);
+
+        $this->applicationService->revertRejectApplication($application);
+
+        return response()->json([
+            'message' => 'Application rejection has been reverted successfully!',
+            'application' => ApplicationResource::make($application)
+        ]);
+    }
 }

@@ -246,5 +246,27 @@ class ApplicationService
         ]);
     }
 
-    // another function for reconsideration where it will remove the reject just to proceed to the next stage
+    /**
+     * Summary of revertRejectApplication
+     * @param Application $application
+     * @throws Exception
+     * @return Application
+     */
+    public function revertRejectApplication(Application $application)
+    {
+        $this->ensureApplicationNotAccepted($application);
+
+        if ($application->status !== ApplicationStatusEnum::Rejected)
+            throw new Exception("The application isn't rejected!");
+
+        $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::InReview);
+
+        return $application->load([
+            'student',
+            'student.course',
+            'student.skill',
+            'internship',
+            'internship.skill'
+        ]);
+    }
 }

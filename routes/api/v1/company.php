@@ -26,5 +26,6 @@ Route::middleware(['role:company'])->prefix('company')->group(function () {
     Route::put('{application}/decide', [ApplicationController::class, 'decideApplication'])->name('decideApplication');
     Route::put('{application}/accept', [ApplicationController::class, 'acceptApplication'])->name('acceptApplication');
     Route::put('{application}/reject', [ApplicationController::class, 'rejectApplication'])->name('rejectApplication');
+    Route::put('{application}/revertReject', [ApplicationController::class, 'revertRejectApplication'])->name('revertRejectApplication');
   });
 });
