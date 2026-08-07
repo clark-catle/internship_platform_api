@@ -21,11 +21,11 @@ class UserResource extends JsonResource
             'status' => $this->status->value,
             'role' => $this->role,
             'company_info' => $this->when(
-                $request->user()->role === UserRoleEnum::Company,
+                ($request->user()->role === UserRoleEnum::Company || $request->user()->role === UserRoleEnum::Admin) && $this->company,
                 CompanyResource::make($this->company)
             ),
             'student_info' => $this->when(
-                $request->user()->role === UserRoleEnum::Student,
+                ($request->user()->role === UserRoleEnum::Student || $request->user()->role === UserRoleEnum::Admin) && $this->student,
                 StudentResource::make($this->student)
             ),
         ];

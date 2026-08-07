@@ -61,12 +61,13 @@ class CompanyController extends Controller
         return UserResource::make($this->companyService->getCompany($user));
     }
 
+    #[Endpoint(title: 'View all company', description: 'The user can freely view all company as long as the user isnt a company role and will only return info of the company')]
     public function viewCompany()
     {
         return CompanyResource::collection($this->companyService->getAllCompany());
     }
 
-    #[Endpoint(title: 'View specific company', description: 'The user can freely view other company as long as the user isnt a company role')]
+    #[Endpoint(title: 'View specific company', description: 'The user can freely view other specific company as long as the user isn\'t a company role and will only return info of the company')]
     public function viewSpecificCompany(Company $company)
     {
         return CompanyResource::make($company);
