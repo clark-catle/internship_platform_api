@@ -54,4 +54,13 @@ class CompanyRepository
     {
         $company->update($data);
     }
+
+    /**
+     * gets all the company info
+     * @return \Illuminate\Database\Eloquent\Collection<int, Company>
+     */
+    public function getAllCompany()
+    {
+        return $this->company->all();
+    }
 }

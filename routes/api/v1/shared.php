@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('role.not:company')->group(function () {
   // View logo of the company
-  Route::get('/company/{company}/logo', [CompanyController::class, 'getCompanyLogo'])->name('logo_company');
+  Route::get('/company', [CompanyController::class, 'viewCompany'])->name('viewCompany');
+  Route::get('/company/{company}', [CompanyController::class, 'viewSpecificCompany'])->name('viewSpecificCompany');
+  Route::get('/company/{company}/logo', [CompanyController::class, 'getCompanyLogo'])->name('getCompanyLogo');
 
   // Internship
   Route::prefix('internship')->group(function () {

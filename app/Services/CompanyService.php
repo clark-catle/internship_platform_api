@@ -7,6 +7,7 @@ use App\DTOs\Company\EditCompanyDTO;
 use App\Enum\File\FileCategoryEnum;
 use App\Models\User;
 use App\Repositories\CompanyRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
@@ -17,7 +18,8 @@ class CompanyService
 
     public function __construct(
         private CompanyRepository $companyRepo,
-        private FileService $fileService
+        private FileService $fileService,
+        private UserRepository $userRepo
     ) {}
 
     /**
@@ -125,5 +127,14 @@ class CompanyService
         $this->ensureCompanyExist($user);
 
         return $this->fileService->getFile($user->company->logo);
+    }
+
+    /**
+     * return all the company user that is a company role
+     * @return \Illuminate\Database\Eloquent\Collection<int, User>|\Illuminate\Support\Collection<int, \stdClass>
+     */
+    public function getAllCompany()
+    {
+        return $this->companyRepo->getAllCompany();
     }
 }

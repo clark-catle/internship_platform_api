@@ -61,6 +61,17 @@ class CompanyController extends Controller
         return UserResource::make($this->companyService->getCompany($user));
     }
 
+    public function viewCompany()
+    {
+        return CompanyResource::collection($this->companyService->getAllCompany());
+    }
+
+    #[Endpoint(title: 'View specific company', description: 'The user can freely view other company as long as the user isnt a company role')]
+    public function viewSpecificCompany(Company $company)
+    {
+        return CompanyResource::make($company);
+    }
+
     #[Endpoint(title: 'Get company logo', description: 'The user that isnt a company user can request the company logo (might be because viewing of internship)')]
     public function getCompanyLogo(Company $company)
     {
