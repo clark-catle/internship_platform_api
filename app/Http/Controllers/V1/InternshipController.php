@@ -89,7 +89,7 @@ class InternshipController extends Controller
         ]);
     }
 
-    #[Endpoint(title: 'Restore Internship', description: 'The user that has a company role can restore their own internship that has been deleted not other\'s internship')]
+    #[Endpoint(title: 'Restore Internship', description: 'The user that has a company role can restore their own internship that they\'ve deleted, but if the internship was deleted by an admin, it can\'t be restored')]
     public function restoreInternship(Internship $internship)
     {
         $this->authorize('access', $internship);
@@ -101,4 +101,16 @@ class InternshipController extends Controller
             'information' => InternshipResource::make($internship)
         ]);
     }
+
+    #[Endpoint(title: 'Force remove internship', description: 'The user can forcefully delete the internship if there\'s some problem in the internship post, the internship will be soft deleted and will be marked that it was deleted by the admin so it can\'t be restored')]
+    public function forceRemove(Internship $internship)
+    {
+        $this->internshipService->forceRemove($internship, request()->user());
+
+        return response()->json(['message' => "The internship has been deleted permanently!"]);
+    }
+
+    to do list
+    fix the api end point of of application to give more context (e.g. /api/v1/company/internships/{internship}/applications/{application}/interview)
+    add a validation where if the admin deleted the internship, its connected application can't be modifed by the company
 }

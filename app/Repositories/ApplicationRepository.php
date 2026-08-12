@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Enum\Application\ApplicationProgressEnum;
 use App\Enum\Application\ApplicationStatusEnum;
 use App\Models\Application;
+use App\Models\Internship;
 
 class ApplicationRepository
 {
@@ -67,5 +68,15 @@ class ApplicationRepository
         $application->update(['progress' => $progress]);
 
         return $application;
+    }
+
+    /**
+     * reject all the application of the passed `$internship` 
+     * @param Internship $internship
+     * @return void
+     */
+    public function rejectAllApplicationOfInternship(Internship $internship)
+    {
+        $this->application->where('internship_id', $internship->id)->update(['status' => ApplicationStatusEnum::Rejected->value]);
     }
 }

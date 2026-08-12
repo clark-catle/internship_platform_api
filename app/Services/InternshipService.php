@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\DTOs\Internship\AddInternshipDTO;
 use App\DTOs\Internship\EditInternshipDTO;
+use App\Jobs\InternshipJobs\InternshipForceDeleteMailJob;
 use App\Models\Internship;
 use App\Models\User;
+use App\Repositories\ApplicationRepository;
 use App\Repositories\InternshipRepository;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
@@ -19,6 +21,7 @@ class InternshipService
         private CompanyService $companyService,
         private InternshipRepository $internshipRepo,
         private SkillService $skillService,
+        private ApplicationRepository $applicationRepo
     ) {}
 
     /**
@@ -91,14 +94,46 @@ class InternshipService
     }
 
     /**
-     * restore the soft deleted `$internship`
+     * restore the soft deleted `$internship` and if the 
+     * `$internship` has been deleted by the admin, it will abort
      * @param Internship $internship
-     * @return void
+     * @return bool
      */
     public function restoreInternship(Internship $internship)
     {
-        DB::transaction(
-            fn() => $this->internshipRepo->restoreInternship($internship)
-        );
+        return DB::transaction(function () use ($internship) {
+            abort_if(filled($internship->admin_deleted_at), 406, 'The internship has been deleted by the admin and can\'t be restore!');
+
+            $this->internshipRepo->restoreInternship($internship);
+        });
+    }
+
+    public function forceRemove(Internship $internship, User $user)
+    {
+        $internship->load(['company.user']);
+
+        DB::transaction(function () use ($internship, $user) {
+            $this->adminDeleteInternship($internship, $user->id);
+
+            $this->applicationRepo->rejectAllApplicationOfInternship($internship);
+        });
+
+        InternshipForceDeleteMailJob::dispatch($internship->company->user);
+    }
+
+    /**
+     * deletes the `$internship` and mark the 
+     * internship that it was deleted by an admin
+     * @param Internship $internship
+     * @param int $adminId
+     * @return void
+     */
+    private function adminDeleteInternship(Internship $internship, int $adminId)
+    {
+        DB::transaction(function () use ($internship, $adminId) {
+            $this->internshipRepo->deleteInternship($internship);
+
+            $this->internshipRepo->adminDeleteInternship($internship, $adminId);
+        });
     }
 }

@@ -15,7 +15,7 @@ namespace App\Models{
 /**
  * @property int $id
  * @property \App\Enum\Application\ApplicationStatusEnum $status
- * @property string $progress
+ * @property \App\Enum\Application\ApplicationProgressEnum $progress
  * @property \Illuminate\Support\Carbon $applied_at
  * @property int|null $resume_id
  * @property int $student_id
@@ -143,6 +143,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $city
+ * @property string|null $admin_deleted_at
+ * @property int|null $admin_deleted_by
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Application> $application
  * @property-read int|null $application_count
  * @property-read \App\Models\Company $company
@@ -152,6 +154,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship whereAdminDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship whereAdminDeletedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship whereAllowance($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship whereCity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Internship whereCompanyId($value)

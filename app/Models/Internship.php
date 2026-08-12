@@ -10,7 +10,7 @@ use App\Enum\Internship\InternshipAllowanceEnum;
 use App\Enum\Internship\InternshipDurationUnitEnum;
 
 
-#[Fillable(['title', 'description', 'requirements', 'region', 'city', 'setup', 'allowance', 'is_active', 'duration', 'duration_unit', 'company_id'])]
+#[Fillable(['title', 'description', 'requirements', 'region', 'city', 'setup', 'allowance', 'is_active', 'duration', 'duration_unit', 'company_id', 'admin_deleted_at', 'admin_deleted_by'])]
 class Internship extends Model
 {
     use SoftDeletes;

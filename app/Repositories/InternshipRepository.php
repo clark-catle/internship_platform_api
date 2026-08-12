@@ -86,4 +86,15 @@ class InternshipRepository
     {
         return Internship::with(['skill', 'company'])->get();
     }
+
+    /**
+     * marks the `$internship` as deleted by the admin
+     * @param Internship $internship
+     * @param int $adminId
+     * @return void
+     */
+    public function adminDeleteInternship(Internship $internship, int $adminId)
+    {
+        $internship->update(['admin_deleted_at' => now(), 'admin_deleted_by' => $adminId]);
+    }
 }
