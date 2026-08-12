@@ -5,13 +5,13 @@ namespace App\Services;
 use App\DTOs\Company\AddCompanyDTO;
 use App\DTOs\Company\EditCompanyDTO;
 use App\Enum\File\FileCategoryEnum;
+use App\Jobs\CompanyJobs\CompanyVerificationMailJob;
 use App\Models\User;
+use App\Models\Company;
 use App\Repositories\CompanyRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CompanyService
 {
@@ -136,5 +136,26 @@ class CompanyService
     public function getAllCompany()
     {
         return $this->companyRepo->getAllCompany();
+    }
+
+    /**
+     * change the verification value of `$company`
+     * base on the passed `$val` value and sending an
+     * email to the `$company` user
+     * @param Company $company
+     * @param bool $val
+     * @return Company
+     */
+    public function changeVerification(Company $company, bool $val)
+    {
+        return DB::transaction(function () use ($company, $val) {
+            $company = $this->companyRepo->changeVerification($company, $val);
+
+            $company->load(['user']);
+
+            CompanyVerificationMailJob::dispatch($company->user);
+
+            return $company;
+        });
     }
 }

@@ -63,4 +63,18 @@ class CompanyRepository
     {
         return $this->company->all();
     }
+
+    /**
+     * change the verification value of `$company`
+     * base on the passed `$val` value
+     * @param Company $company
+     * @param bool $val
+     * @return Company
+     */
+    public function changeVerification(Company $company, bool $val)
+    {
+        $company->update(['is_verified' => $val]);
+
+        return $company;
+    }
 }

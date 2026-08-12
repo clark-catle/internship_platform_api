@@ -5,6 +5,7 @@ namespace App\Http\Controllers\V1;
 use App\DTOs\Company\AddCompanyDTO;
 use App\DTOs\Company\EditCompanyDTO;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminRequests\CompanyVerificationRequest;
 use App\Http\Requests\CompanyRequests\AddCompanyRequest;
 use App\Http\Requests\CompanyRequests\EditCompanyRequest;
 use App\Http\Resources\CompanyResource;
@@ -83,5 +84,14 @@ class CompanyController extends Controller
     public function getLogo()
     {
         return $this->companyService->getLogo(request()->user());
+    }
+
+    #[Endpoint(title: 'Change company verification', description: 'The user that is an admin can change the company verification value')]
+    public function changeVerification(CompanyVerificationRequest $request, Company $company)
+    {
+        return response()->json([
+            'message' => "The company verification has been changed successfully!",
+            'company' => CompanyResource::make($this->companyService->changeVerification($company, $request->boolean('verification')))
+        ]);
     }
 }
