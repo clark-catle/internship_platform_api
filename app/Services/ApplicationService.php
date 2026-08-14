@@ -19,6 +19,7 @@ use App\Models\Internship;
 use App\Models\Student;
 use App\Models\User;
 use App\Repositories\ApplicationRepository;
+use App\Repositories\InternshipRepository;
 use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,8 @@ class ApplicationService
         private FileService $fileService,
         private StudentService $studentService,
         private ApplicationRepository $applicationRepo,
-        private CompanyService $companyService
+        private CompanyService $companyService,
+        private InternshipService $internshipService
     ) {}
 
     /**
@@ -59,6 +61,8 @@ class ApplicationService
                 $this->fileService->addFile($file, FileCategoryEnum::File)->id : $student->resume_id;
 
             $application = $this->applicationRepo->applyInternship($student->id, $resume_id, $internship->id);
+
+            $this->internshipService->recalculateActiveStatus($internship);
 
             NewApplyMailJob::dispatch($application);
 
@@ -142,6 +146,10 @@ class ApplicationService
         return DB::transaction(function () use ($application) {
             if ($application->status === ApplicationStatusEnum::Pending) {
                 $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::InReview);
+
+                $application->load(['internship']);
+
+                $this->internshipService->recalculateActiveStatus($application->internship);
 
                 ApplicationInreviewMailJob::dispatch($application);
             }

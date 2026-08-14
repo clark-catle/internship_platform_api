@@ -97,4 +97,17 @@ class InternshipRepository
     {
         $internship->update(['admin_deleted_at' => now(), 'admin_deleted_by' => $adminId]);
     }
+
+    /**
+     * updates the is_active of the `$internship` base on the passed `$pendingPercentage`
+     * @param Internship $internship
+     * @param int $pendingPercentage
+     * @return void
+     */
+    public function isActive(Internship $internship, int $pendingPercentage)
+    {
+        $internship->update([
+            'is_active' => $pendingPercentage >= 20,
+        ]);
+    }
 }

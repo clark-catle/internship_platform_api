@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTOs\Internship\AddInternshipDTO;
 use App\DTOs\Internship\EditInternshipDTO;
+use App\Enum\Application\ApplicationStatusEnum;
 use App\Jobs\InternshipJobs\InternshipForceDeleteMailJob;
 use App\Models\Internship;
 use App\Models\User;
@@ -161,5 +162,28 @@ class InternshipService
         $internship->load(['application.student.skill', 'application.student.course']);
 
         return $internship->application;
+    }
+
+    /**
+     * calucalates the activity of the `$internship`, it will be marked as active
+     * if its pending status of the `$internship` is in only 20%
+     * @param Internship $internship
+     * @return void
+     */
+    public function recalculateActiveStatus(Internship $internship)
+    {
+        $total = $this->applicationRepo->applicationCount();
+
+        if ($total === 0) {
+            return;
+        }
+
+        DB::transaction(function () use ($internship, $total) {
+            $pending = $this->applicationRepo->applicationsStatusCount(ApplicationStatusEnum::Pending);
+
+            $percentage = ($pending / $total) * 100;
+
+            $this->internshipRepo->isActive($internship, $percentage);
+        });
     }
 }

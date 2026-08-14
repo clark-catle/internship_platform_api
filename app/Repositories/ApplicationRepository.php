@@ -123,4 +123,23 @@ class ApplicationRepository
             'internship.skill',
         ])->get();
     }
+
+    /**
+     * returns the overall count of the application
+     * @return int
+     */
+    public function applicationCount()
+    {
+        return $this->application->count();
+    }
+
+    /**
+     * return the count of the application that has a `$status` value
+     * @param ApplicationStatusEnum $status
+     * @return int
+     */
+    public function applicationsStatusCount(ApplicationStatusEnum $status)
+    {
+        return $this->application->where('status', $status)->count();
+    }
 }
