@@ -8,6 +8,7 @@ use App\Models\Internship;
 use App\Models\User;
 use App\Repositories\CompanyRepository;
 use App\Repositories\StudentRepository;
+use Illuminate\Auth\Access\Response;
 
 class ApplicationPolicy
 {
@@ -56,12 +57,17 @@ class ApplicationPolicy
      * owns the internship that was connected to the `$aplication`
      * @param User $user
      * @param Application $application
-     * @return bool
+     * @return bool | Response
      */
     public function companyAccessApplication(User $user, Application $application)
     {
         if (!$user->company)
             return false;
+
+        if (!$application->internship()->exists())
+            return Response::deny(
+                'This application can no longer be processed because its internship no longer exists.'
+            );
 
         return $user->company->id === $application->internship->company_id;
     }

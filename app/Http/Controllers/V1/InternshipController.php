@@ -110,7 +110,7 @@ class InternshipController extends Controller
         return response()->json(['message' => "The internship has been deleted permanently!"]);
     }
 
-    to do list
-    fix the api end point of of application to give more context (e.g. /api/v1/company/internships/{internship}/applications/{application}/interview)
-    add a validation where if the admin deleted the internship, its connected application can't be modifed by the company
+    // to do list
+    // fix the api end point of of application to give more context (e.g. /api/v1/company/internships/{internship}/applications/{application}/interview)
+    // add a validation where if the admin deleted the internship, its connected application can't be modifed by the company
 }

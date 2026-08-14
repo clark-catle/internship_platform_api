@@ -9,6 +9,7 @@ use App\Models\Internship;
 use App\Models\User;
 use App\Repositories\ApplicationRepository;
 use App\Repositories\InternshipRepository;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
@@ -102,7 +103,7 @@ class InternshipService
     public function restoreInternship(Internship $internship)
     {
         return DB::transaction(function () use ($internship) {
-            abort_if(filled($internship->admin_deleted_at), 406, 'The internship has been deleted by the admin and can\'t be restore!');
+            $this->ensureNotDeletedByAdmin($internship);
 
             $this->internshipRepo->restoreInternship($internship);
         });
@@ -135,5 +136,18 @@ class InternshipService
 
             $this->internshipRepo->adminDeleteInternship($internship, $adminId);
         });
+    }
+
+    /**
+     * ensure that the `$intenship` wasn't deleted by an admin,
+     * if it is, it will throw an exception
+     * @param Internship $internship
+     * @throws Exception
+     * @return void
+     */
+    private function ensureNotDeletedByAdmin(Internship $internship)
+    {
+        if (filled($internship->admin_deleted_at))
+            throw new Exception('The internship has been deleted by the admin and can\'t be restore!');
     }
 }

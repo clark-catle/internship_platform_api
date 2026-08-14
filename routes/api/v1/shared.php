@@ -14,8 +14,8 @@ Route::middleware('role.not:company')->group(function () {
 
   // Internship
   Route::prefix('internship')->group(function () {
-    Route::get('/viewInternship', [InternshipController::class, 'viewInternship'])->name('viewInternship');
-    Route::get('/viewInternship/{internship}', [InternshipController::class, 'viewSpecificInternship'])->name('viewSpecificInternship');
+    Route::get('', [InternshipController::class, 'viewInternship'])->name('viewInternship');
+    Route::get('/{internship}', [InternshipController::class, 'viewSpecificInternship'])->name('viewSpecificInternship');
   });
 });
 
