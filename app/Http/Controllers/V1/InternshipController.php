@@ -7,6 +7,7 @@ use App\DTOs\Internship\EditInternshipDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InternshipRequests\AddInternshipRequest;
 use App\Http\Requests\InternshipRequests\EditInternshipRequest;
+use App\Http\Resources\ApplicationResource;
 use App\Http\Resources\InternshipResource;
 use App\Models\Internship;
 use App\Services\InternshipService;
@@ -102,7 +103,7 @@ class InternshipController extends Controller
         ]);
     }
 
-    #[Endpoint(title: 'Force remove internship', description: 'The user can forcefully delete the internship if there\'s some problem in the internship post, the internship will be soft deleted and will be marked that it was deleted by the admin so it can\'t be restored')]
+    #[Endpoint(title: 'Force remove internship', description: 'The user admin can forcefully delete the internship if there\'s some problem in the internship post, the internship will be soft deleted and will be marked that it was deleted by the admin so it can\'t be restored')]
     public function forceRemove(Internship $internship)
     {
         $this->internshipService->forceRemove($internship, request()->user());
@@ -110,7 +111,13 @@ class InternshipController extends Controller
         return response()->json(['message' => "The internship has been deleted permanently!"]);
     }
 
-    // to do list
-    // fix the api end point of of application to give more context (e.g. /api/v1/company/internships/{internship}/applications/{application}/interview)
-    // add a validation where if the admin deleted the internship, its connected application can't be modifed by the company
+    #[Endpoint(title: 'View all application of internship', description: 'The user that has a company role can view all the application of the internship that the user post')]
+    public function viewApplicationsOfInternship(Internship $internship)
+    {
+        $this->authorize('access', $internship);
+
+        $applications = $this->internshipService->viewApplicationOfInternship($internship);
+
+        return ApplicationResource::collection($applications);
+    }
 }

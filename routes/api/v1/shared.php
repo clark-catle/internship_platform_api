@@ -14,13 +14,13 @@ Route::middleware('role.not:company')->group(function () {
 
   // Internship
   Route::prefix('internship')->group(function () {
-    Route::get('', [InternshipController::class, 'viewInternship'])->name('viewInternship');
+    Route::get('/', [InternshipController::class, 'viewInternship'])->name('viewInternship');
     Route::get('/{internship}', [InternshipController::class, 'viewSpecificInternship'])->name('viewSpecificInternship');
   });
 });
 
 // Application of internship
 Route::prefix('application')->group(function () {
-  Route::get('{application}', [ApplicationController::class, 'viewApplication'])->name('viewApplication');
-  Route::get('{application}/resume', [ApplicationController::class, 'viewApplicationResume'])->name('viewApplicationResume');
+  Route::get('/{application}', [ApplicationController::class, 'viewApplication'])->name('viewApplication');
+  Route::get('/{application}/resume', [ApplicationController::class, 'viewApplicationResume'])->name('viewApplicationResume');
 });

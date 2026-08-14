@@ -13,12 +13,15 @@ Route::middleware(['role:company'])->prefix('company')->group(function () {
   Route::get('/getLogo', [CompanyController::class, 'getLogo'])->name('getLogo');
 
   //Internship
-  Route::get('/internship', [InternshipController::class, 'companyInternship'])->name('companyInternship');
-  Route::get('/internship/{internship}', [InternshipController::class, 'specificCompanyInternship'])->name('specificCompanyInternship');
-  Route::post('/addInternship', [InternshipController::class, 'addInternship'])->name('addInternship');
-  Route::put('/editInternship/{internship}', [InternshipController::class, 'editInternship'])->name('editInternship');
-  Route::delete('/deleteInternship/{internship}', [InternshipController::class, 'deleteInternship'])->name('deleteInternship');
-  Route::put('/restoreInternship/{internship}', [InternshipController::class, 'restoreInternship'])->name('restoreInternship')->withTrashed();
+  Route::prefix('internship')->group(function () {
+    Route::get('/', [InternshipController::class, 'companyInternship'])->name('companyInternship');
+    Route::get('/{internship}', [InternshipController::class, 'specificCompanyInternship'])->name('specificCompanyInternship');
+    Route::get('/{internship}/application', [InternshipController::class, 'viewApplicationsOfInternship'])->name('viewApplicationsOfInternship');
+    Route::post('/addInternship', [InternshipController::class, 'addInternship'])->name('addInternship');
+    Route::put('/{internship}/editInternship', [InternshipController::class, 'editInternship'])->name('editInternship');
+    Route::delete('/{internship}/deleteInternship', [InternshipController::class, 'deleteInternship'])->name('deleteInternship');
+    Route::put('/{internship}/restoreInternship', [InternshipController::class, 'restoreInternship'])->name('restoreInternship')->withTrashed();
+  });
 
   //Application
   Route::prefix('application')->group(function () {

@@ -24,7 +24,7 @@ class ApplicationResource extends JsonResource
                 $request->user()->role !== UserRoleEnum::Student,
                 StudentResource::make($this->student)
             ),
-            'internship' => InternshipResource::make($this->internship)
+            'internship' => $this->whenLoaded('internship', fn() => InternshipResource::make($this->internship))
         ];
     }
 }

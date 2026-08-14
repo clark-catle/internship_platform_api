@@ -150,4 +150,16 @@ class InternshipService
         if (filled($internship->admin_deleted_at))
             throw new Exception('The internship has been deleted by the admin and can\'t be restore!');
     }
+
+    /**
+     * return the applications that is connected to the `$internship`
+     * @param Internship $internship
+     * @return \App\Models\Application|\Illuminate\Database\Eloquent\Collection<int, \App\Models\Application>
+     */
+    public function viewApplicationOfInternship(Internship $internship)
+    {
+        $internship->load(['application.student.skill', 'application.student.course']);
+
+        return $internship->application;
+    }
 }
