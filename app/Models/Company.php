@@ -35,4 +35,9 @@ class Company extends Model
     {
         return $this->morphMany(Report::class, 'reportable');
     }
+
+    public function applications()
+    {
+        return $this->hasManyThrough(Application::class, Internship::class);
+    }
 }

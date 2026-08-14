@@ -5,7 +5,9 @@ namespace App\Repositories;
 use App\Enum\Application\ApplicationProgressEnum;
 use App\Enum\Application\ApplicationStatusEnum;
 use App\Models\Application;
+use App\Models\Company;
 use App\Models\Internship;
+use App\Models\Student;
 
 class ApplicationRepository
 {
@@ -78,5 +80,47 @@ class ApplicationRepository
     public function rejectAllApplicationOfInternship(Internship $internship)
     {
         $this->application->where('internship_id', $internship->id)->update(['status' => ApplicationStatusEnum::Rejected->value]);
+    }
+
+    /**
+     * retrieve all the application of the passed `$studentId`
+     * @param int $studentId
+     * @return \Illuminate\Database\Eloquent\Collection<int, Application>|\Illuminate\Support\Collection<int, \stdClass>
+     */
+    public function getAllStudentApplication(int $studentId)
+    {
+        return $this->application->where('student_id', $studentId)
+            ->with(['internship.skill'])->get();
+    }
+
+    /**
+     * retrieve all the application that was passed to the company
+     * @param Company $company
+     * @return \Illuminate\Database\Eloquent\Collection<int, Application>
+     */
+    public function getAllCompanyApplication(Company $company)
+    {
+        return $company->applications()->with([
+            'student',
+            'student.course',
+            'student.skill',
+            'internship',
+            'internship.skill'
+        ])->get();
+    }
+
+    /**
+     * retrieve all the application info
+     * @return \Illuminate\Database\Eloquent\Collection<int, Application>|\Illuminate\Support\Collection<int, \stdClass>
+     */
+    public function getAllApplication()
+    {
+        return $this->application->with([
+            'student',
+            'student.course',
+            'student.skill',
+            'internship',
+            'internship.skill',
+        ])->get();
     }
 }

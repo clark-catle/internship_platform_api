@@ -38,6 +38,16 @@ class ApplicationController extends Controller
         ]);
     }
 
+    #[Endpoint(title: 'View all application', description: 'Student user can view their passed application, company can view the applications that was passed in thier internship post, while the admin can view all the application')]
+    public function viewAllApplication()
+    {
+        $user = request()->user();
+
+        $application = $this->applicationService->viewAllApplication($user);
+
+        return ApplicationResource::collection($application);
+    }
+
     #[Endpoint(title: 'View internship application', description: 'The user can view the application, if the user is a student, it can only see its own application, but if the user is a company, it can only see its only see the application that was connected to its posted internship and the application that was seen, its status will be updated into in review')]
     public function viewApplication(Application $application)
     {

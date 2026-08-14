@@ -21,6 +21,7 @@ Route::middleware('role.not:company')->group(function () {
 
 // Application of internship
 Route::prefix('application')->group(function () {
+  Route::get('/', [ApplicationController::class, 'viewAllApplication'])->name('viewAllApplication');
   Route::get('/{application}', [ApplicationController::class, 'viewApplication'])->name('viewApplication');
   Route::get('/{application}/resume', [ApplicationController::class, 'viewApplicationResume'])->name('viewApplicationResume');
 });

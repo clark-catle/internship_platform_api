@@ -8,6 +8,7 @@ use App\Enum\File\FileCategoryEnum;
 use App\Models\Student;
 use App\Models\User;
 use App\Repositories\StudentRepository;
+use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
@@ -140,5 +141,22 @@ class StudentService
     {
         if (!$this->studentRepo->studentResumeExist($student))
             throw new ConflictHttpException('Student doesn\'t have a resume yet.');
+    }
+
+    /**
+     * ensures that the `$user` has a student info, if it has
+     * it will return a student, if not it will throw an exception
+     * @param User $user
+     * @throws Exception
+     * @return Student
+     */
+    public function ensureStudentExist(User $user)
+    {
+        if (!$user->student()->exists())
+            throw new Exception('The user doesn\'t have a student info yet!');
+
+        $user->load(['student']);
+
+        return $user->student;
     }
 }

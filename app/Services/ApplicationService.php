@@ -14,8 +14,10 @@ use App\Jobs\ApplicationJobs\ApplicationInreviewMailJob;
 use App\Jobs\ApplicationJobs\ApplicationRejectedMailJob;
 use App\Jobs\ApplicationJobs\RevertRejectedApplicationMailJob;
 use App\Models\Application;
+use App\Models\Company;
 use App\Models\Internship;
 use App\Models\Student;
+use App\Models\User;
 use App\Repositories\ApplicationRepository;
 use Exception;
 use Illuminate\Http\UploadedFile;
@@ -30,7 +32,8 @@ class ApplicationService
     public function __construct(
         private FileService $fileService,
         private StudentService $studentService,
-        private ApplicationRepository $applicationRepo
+        private ApplicationRepository $applicationRepo,
+        private CompanyService $companyService
     ) {}
 
     /**
@@ -61,6 +64,36 @@ class ApplicationService
 
             return $application->load(['internship', 'internship.company', 'internship.skill'])->refresh();
         });
+    }
+
+    /**
+     * retruns an application info base on the passed `$user` role
+     * @param User $user
+     * @return \Illuminate\Database\Eloquent\Collection<int, Application>|\Illuminate\Support\Collection<int, \stdClass>|null
+     */
+    public function viewAllApplication(User $user)
+    {
+        $role = $user->role;
+
+        switch ($role) {
+            case UserRoleEnum::Student:
+                $student = $this->studentService->ensureStudentExist($user);
+
+                return $this->applicationRepo->getAllStudentApplication($student->id);
+
+            case UserRoleEnum::Company:
+                $this->companyService->ensureCompanyExist($user);
+
+                $user->load(['company']);
+
+                return $this->applicationRepo->getAllCompanyApplication($user->company);
+
+            case UserRoleEnum::Admin:
+                return $this->applicationRepo->getAllApplication();
+
+            default:
+                return null;
+        }
     }
 
     /**
