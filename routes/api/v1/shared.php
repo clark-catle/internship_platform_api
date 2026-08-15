@@ -4,6 +4,7 @@ use App\Http\Controllers\V1\ApplicationController;
 use App\Http\Controllers\V1\CompanyController;
 use App\Http\Controllers\V1\FileController;
 use App\Http\Controllers\V1\InternshipController;
+use App\Http\Controllers\V1\PasswordController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('role.not:company')->group(function () {
@@ -25,3 +26,5 @@ Route::prefix('application')->group(function () {
   Route::get('/{application}', [ApplicationController::class, 'viewApplication'])->name('viewApplication');
   Route::get('/{application}/resume', [ApplicationController::class, 'viewApplicationResume'])->name('viewApplicationResume');
 });
+
+Route::post('/user/forgotPass', [PasswordController::class, 'sendResetPassword'])->name('sendResetPassword');

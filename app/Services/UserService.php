@@ -7,7 +7,9 @@ use App\Enum\User\UserStatusEnum;
 use App\Jobs\UserJobs\ChangeUserStatusMailJob;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Password;
 
 class UserService
 {
@@ -45,5 +47,13 @@ class UserService
 
             return $user;
         });
+    }
+
+    public function sendResetPassword(string $email)
+    {
+        $status = Password::sendResetLink(['email' => $email]);
+
+        if ($status !== Password::RESET_LINK_SENT)
+            throw new Exception($status);
     }
 }
