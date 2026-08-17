@@ -55,5 +55,7 @@ class UserService
 
         if ($status !== Password::RESET_LINK_SENT)
             throw new Exception($status);
+
+        return $status;
     }
 }

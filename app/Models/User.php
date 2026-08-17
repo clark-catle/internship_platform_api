@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enum\User\UserRoleEnum;
 use App\Enum\User\UserStatusEnum;
+use App\Notifications\UserNotifiications\PasswordResetNotification;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -49,5 +50,10 @@ class User extends Authenticatable
     public function report()
     {
         return $this->hasMany(Report::class, 'reporter_user_id');
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new PasswordResetNotification($token, $this->email));
     }
 }
