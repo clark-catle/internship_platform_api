@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
 class PasswordResetNotification extends Notification
 {
@@ -37,6 +38,8 @@ class PasswordResetNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $url = config('app.frontend_url') . '/reset-password?token=' . $this->token . '&email=' . urlencode($this->email);
+
+        Log::info($this->token);
 
         return (new MailMessage)
             ->subject('Reset Password Notification')

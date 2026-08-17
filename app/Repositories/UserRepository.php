@@ -23,4 +23,16 @@ class UserRepository
     {
         $user->update(['status' => $status]);
     }
+
+    /**
+     * change the password of the `$user` base on the passed `$password`, 
+     * automatically hashed because was defined in user model
+     * @param User $user
+     * @param string $password
+     * @return void
+     */
+    public function changePassword(User $user, string $password)
+    {
+        $user->update(['password' => $password]);
+    }
 }

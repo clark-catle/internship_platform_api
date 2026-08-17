@@ -27,4 +27,8 @@ Route::prefix('application')->group(function () {
   Route::get('/{application}/resume', [ApplicationController::class, 'viewApplicationResume'])->name('viewApplicationResume');
 });
 
-Route::post('/user/forgotPass', [PasswordController::class, 'sendResetPassword'])->name('sendResetPassword');
+// User
+Route::prefix('user')->group(function () {
+  Route::post('/forgotPassword', [PasswordController::class, 'sendForgotPassword'])->name('sendForgotPassword');
+  Route::post('/resetPassword', [PasswordController::class, 'resetPassword'])->name('resetPassword');
+});
