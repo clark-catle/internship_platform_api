@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTOs\User\ChangePasswordDTO;
 use App\DTOs\User\ResetPasswordDTO;
 use App\Enum\User\UserRoleEnum;
 use App\Enum\User\UserStatusEnum;
@@ -10,6 +11,7 @@ use App\Models\User;
 use App\Repositories\UserRepository;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 
 class UserService
@@ -94,6 +96,27 @@ class UserService
      */
     public function logout(User $user)
     {
-        $user->tokens()->delete();
+        DB::transaction(fn() => $user->tokens()->delete());
+    }
+
+    /**
+     * change the password of the `$user` by checking
+     * if the old password is correct first then proceed
+     * to changing of password then logging out the user automatically
+     * @param User $user
+     * @param ChangePasswordDTO $data
+     * @throws Exception
+     * @return void
+     */
+    public function changePassword(User $user, ChangePasswordDTO $data)
+    {
+        if (!Hash::check($data->oldPassword, $user->password))
+            throw new Exception('The old password is wrong!');
+
+        DB::transaction(function () use ($user, $data) {
+            $this->userRepo->changePassword($user, $data->newPassword);
+
+            $this->logout($user);
+        });
     }
 }
