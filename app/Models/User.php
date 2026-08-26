@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enum\User\UserRoleEnum;
 use App\Enum\User\UserStatusEnum;
+use App\Mail\UserMails\ForgotPasswordMail;
 use App\Notifications\UserNotifiications\PasswordResetNotification;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\HasApiTokens;
 
 #[Fillable(['role', 'email', 'password', 'email_verifed_at', 'status'])]
@@ -54,6 +56,8 @@ class User extends Authenticatable
 
     public function sendPasswordResetNotification($token): void
     {
-        $this->notify(new PasswordResetNotification($token, $this->email));
+        Mail::to($this->email)->send(new ForgotPasswordMail($this, $token));
     }
+
+    changing all the mail into notification
 }
