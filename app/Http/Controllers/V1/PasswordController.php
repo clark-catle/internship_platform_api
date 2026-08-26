@@ -51,7 +51,4 @@ class PasswordController extends Controller
             'message' => 'The password has been changed successfully!',
         ]);
     }
-
-    todo list:
-    added report intern and application and the admin can view the reports and make an action about it
 }
