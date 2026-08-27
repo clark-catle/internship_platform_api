@@ -16,6 +16,7 @@ use App\Models\Application;
 use App\Models\Internship;
 use App\Models\Student;
 use App\Models\User;
+use App\Notifications\ApplicationNotifications\ApplicationInReviewStudentNotification;
 use App\Notifications\ApplicationNotifications\NewApplicationCompanyNotification;
 use App\Repositories\ApplicationRepository;
 use Exception;
@@ -105,14 +106,16 @@ class ApplicationService
     }
 
     /**
-     * ready and load the needed `$application` info base on the `$role` that was passed, 
+     * ready and load the needed `$application` info base on the `$user` role that was passed, 
      * if the `$role` is company, it will update the status of the application into in review
      * @param Application $application
-     * @param UserRoleEnum $role
+     * @param User $user
      * @return Application|null
      */
-    public function viewApplication(Application $application, UserRoleEnum $role)
+    public function viewApplication(Application $application, User $user)
     {
+        $role = $user->role;
+
         switch ($role) {
             case UserRoleEnum::Student:
                 return $application->load([
@@ -122,7 +125,7 @@ class ApplicationService
                 ]);
 
             case UserRoleEnum::Company:
-                return $this->companyViewApplication($application);
+                return $this->companyViewApplication($application, $user);
 
             case UserRoleEnum::Admin:
                 return $application->load([
@@ -145,27 +148,30 @@ class ApplicationService
      * @param Application $application
      * @throws Exception
      */
-    private function companyViewApplication(Application $application)
+    private function companyViewApplication(Application $application, User $user)
     {
-        return DB::transaction(function () use ($application) {
-            if ($application->status === ApplicationStatusEnum::Pending) {
-                $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::InReview);
 
-                $application->load(['internship']);
+        if ($application->status === ApplicationStatusEnum::Pending) {
+            DB::transaction(fn() => $this->applicationRepo
+                ->updateApplicationStatus(
+                    $application,
+                    ApplicationStatusEnum::InReview
+                ));
 
-                $this->internshipService->recalculateActiveStatus($application->internship);
+            $application->load(['internship']);
 
-                ApplicationInreviewMailJob::dispatch($application);
-            }
+            $this->internshipService->recalculateActiveStatus($application->internship);
 
-            return $application->load([
-                'student',
-                'student.course',
-                'student.skill',
-                'internship',
-                'internship.skill'
-            ]);
-        });
+            $user->notify(new ApplicationInReviewStudentNotification($application));
+        }
+
+        return $application->load([
+            'student',
+            'student.course',
+            'student.skill',
+            'internship',
+            'internship.skill'
+        ]);
     }
 
     /**

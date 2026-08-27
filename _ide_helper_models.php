@@ -54,6 +54,8 @@ namespace App\Models{
  * @property int $user_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Application> $applications
+ * @property-read int|null $applications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Internship> $internship
  * @property-read int|null $internship_count
  * @property-read \App\Models\File|null $logo
@@ -312,6 +314,8 @@ namespace App\Models{
  * @property string|null $course_other
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $first_name
+ * @property string|null $last_name
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Application> $application
  * @property-read int|null $application_count
  * @property-read \App\Models\File|null $avatar
@@ -331,7 +335,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereCourseId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereCourseOther($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereFirstName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereLastName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereRegion($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereResumeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Student whereSchool($value)
