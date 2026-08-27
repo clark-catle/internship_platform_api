@@ -11,6 +11,7 @@ use App\Jobs\ApplicationJobs\ApplicationAcceptedMailJob;
 use App\Jobs\ApplicationJobs\ApplicationInterviewMailJob;
 use App\Jobs\ApplicationJobs\ApplicationInreviewMailJob;
 use App\Jobs\ApplicationJobs\ApplicationRejectedMailJob;
+use App\Jobs\ApplicationJobs\RecalculateJobForActiveStatus;
 use App\Jobs\ApplicationJobs\RevertRejectedApplicationMailJob;
 use App\Models\Application;
 use App\Models\Internship;
@@ -63,7 +64,7 @@ class ApplicationService
 
             $application = $this->applicationRepo->applyInternship($student->id, $resume_id, $internship->id);
 
-            $this->internshipService->recalculateActiveStatus($internship);
+            RecalculateJobForActiveStatus::dispatch($application->internship);
 
             return $application->fresh(['internship', 'internship.company', 'internship.skill']);
         });
@@ -160,7 +161,7 @@ class ApplicationService
 
             $application->load(['internship']);
 
-            $this->internshipService->recalculateActiveStatus($application->internship);
+            RecalculateJobForActiveStatus::dispatch($application->internship);
 
             $user->notify(new ApplicationInReviewStudentNotification($application));
         }

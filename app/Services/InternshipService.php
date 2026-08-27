@@ -174,9 +174,8 @@ class InternshipService
     {
         $total = $this->applicationRepo->applicationCount();
 
-        if ($total === 0) {
+        if ($total === 0)
             return;
-        }
 
         DB::transaction(function () use ($internship, $total) {
             $pending = $this->applicationRepo->applicationsStatusCount(ApplicationStatusEnum::Pending);
