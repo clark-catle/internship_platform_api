@@ -12,6 +12,8 @@ class AddStudentDTO
      * @param string[] $other_skills
      */
     public function __construct(
+        public readonly string $first_name,
+        public readonly string $last_name,
         public readonly string $region,
         public readonly string $city,
         public readonly string $cellphone_number,
@@ -26,6 +28,8 @@ class AddStudentDTO
     public static function fromRequest(AddStudentRequest $request)
     {
         return new self(
+            first_name: $request->string('first_name'),
+            last_name: $request->string('last_name'),
             region: $request->string('region'),
             city: $request->string('city'),
             cellphone_number: $request->string('cellphone_number'),

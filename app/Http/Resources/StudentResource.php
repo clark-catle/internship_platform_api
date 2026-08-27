@@ -16,6 +16,10 @@ class StudentResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => [
+                'first_name' => $this->first_name,
+                'last_name' => $this->last_name,
+            ],
             'school' => $this->school,
             'cellphone_number' => $this->cellphone_number,
             'course' => CourseResource::make($this->course),

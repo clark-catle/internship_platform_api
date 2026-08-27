@@ -11,6 +11,8 @@ class EditStudentDTO
      * Create a new class instance.
      */
     public function __construct(
+        public readonly ?string $first_name,
+        public readonly ?string $last_name,
         public readonly ?string $region,
         public readonly ?string $city,
         public readonly ?string $cellphone_number,
@@ -25,6 +27,8 @@ class EditStudentDTO
     public static function fromRequest(EditStudentRequest $request)
     {
         return new self(
+            first_name: $request->string('first_name'),
+            last_name: $request->string('last_name'),
             region: $request->string('region'),
             city: $request->string('city'),
             cellphone_number: $request->string('cellphone_number'),
@@ -46,6 +50,8 @@ class EditStudentDTO
     public function toUpdatable(?int $avatarId, ?int $resumeId)
     {
         return array_filter([
+            "first_name" => $this->first_name,
+            "last_name" => $this->last_name,
             "region" => $this->region,
             "city" => $this->city,
             "cellphone_number" => $this->cellphone_number,

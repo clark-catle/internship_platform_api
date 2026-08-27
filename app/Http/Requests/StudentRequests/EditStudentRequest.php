@@ -24,6 +24,8 @@ class EditStudentRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'first_name'       => ['sometimes', 'nullable', 'string', 'max:255'],
+            'last_name'        => ['sometimes', 'nullable', 'string', 'max:255'],
             'region'           => ['sometimes', 'nullable', 'string', 'max:255'],
             'city'             => ['sometimes', 'nullable', 'string', 'max:255'],
             'cellphone_number' => ['sometimes', 'nullable', 'string', 'regex:/^09\d{9}$/'],

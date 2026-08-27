@@ -45,6 +45,8 @@ class StudentRepository
     public function addStudent(AddStudentDTO $data, int $userId, ?int $resumeId, ?int $avatarId)
     {
         return $this->student->create([
+            "first_name" => $data->first_name,
+            "last_name" => $data->last_name,
             "region" => $data->region,
             "city" => $data->city,
             "cellphone_number" => $data->cellphone_number,

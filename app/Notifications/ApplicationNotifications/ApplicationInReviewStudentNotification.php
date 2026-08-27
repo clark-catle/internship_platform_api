@@ -41,7 +41,7 @@ class ApplicationInReviewStudentNotification extends Notification
         return (new MailMessage)
             ->subject("Your Application for {$this->application->internship->title} Has Been Viewed")
             ->view('emails.application.application-viewed', [
-                'userName' => $notifiable->name,
+                'userName' => $this->application->student->name,
                 'companyName' => $this->application->internship->company->name,
                 'internshipTitle' => $this->application->internship->title,
                 'applicationUrl' => $applicationUrl,

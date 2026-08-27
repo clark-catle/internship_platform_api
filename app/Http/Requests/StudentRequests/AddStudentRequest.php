@@ -24,6 +24,8 @@ class AddStudentRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'first_name'       => ['required', 'string', 'max:255'],
+            'last_name'        => ['required', 'string', 'max:255'],
             'region'           => ['required', 'string', 'max:255'],
             'city'             => ['required', 'string', 'max:255'],
             'cellphone_number' => ['required', 'string', 'regex:/^09\d{9}$/'],
