@@ -58,6 +58,4 @@ class User extends Authenticatable
     {
         Mail::to($this->email)->send(new ForgotPasswordMail($this, $token));
     }
-
-    changing all the mail into notification
 }

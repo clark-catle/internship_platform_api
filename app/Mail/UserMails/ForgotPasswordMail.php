@@ -41,7 +41,7 @@ class ForgotPasswordMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.forgot-password',
+            view: 'emails.auth.forgot-password',
             with: [
                 'url' => config('app.frontend_url') .
                     '/reset-password/' .

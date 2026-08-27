@@ -9,17 +9,15 @@ use App\Enum\User\UserRoleEnum;
 use App\Jobs\ApplicationJobs\ApplicationDecisionStageMailJob;
 use App\Jobs\ApplicationJobs\ApplicationAcceptedMailJob;
 use App\Jobs\ApplicationJobs\ApplicationInterviewMailJob;
-use App\Jobs\ApplicationJobs\NewApplyMailJob;
 use App\Jobs\ApplicationJobs\ApplicationInreviewMailJob;
 use App\Jobs\ApplicationJobs\ApplicationRejectedMailJob;
 use App\Jobs\ApplicationJobs\RevertRejectedApplicationMailJob;
 use App\Models\Application;
-use App\Models\Company;
 use App\Models\Internship;
 use App\Models\Student;
 use App\Models\User;
+use App\Notifications\ApplicationNotifications\NewApplicationCompanyNotification;
 use App\Repositories\ApplicationRepository;
-use App\Repositories\InternshipRepository;
 use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -43,14 +41,16 @@ class ApplicationService
      * it will throw an exception but if its a no it will proceed, now
      * if the passed `$file` is null, it will check if the `$student` has a 
      * resume, if not it will throw an error, but if there's a passed `$file`
-     * then it will create it and store it, after that it will create an application 
+     * then it will create it and store it, after that it will create an application,
+     * at last it will make a notification for the company who posted the `$internship`
+     * by inserting a new notification and sending an email
      * @param ?UploadedFile $file
      * @param Student $student
      * @param Internship $internship
      */
     public function applyInternship(?UploadedFile $file, Student $student, Internship $internship)
     {
-        return DB::transaction(function () use ($file, $student, $internship) {
+        $application = DB::transaction(function () use ($file, $student, $internship): Application {
             if ($this->applicationRepo->alreadyApplied($student->id, $internship->id))
                 throw new ConflictHttpException('Student already applied in this internship.');
 
@@ -64,10 +64,14 @@ class ApplicationService
 
             $this->internshipService->recalculateActiveStatus($internship);
 
-            NewApplyMailJob::dispatch($application);
-
-            return $application->load(['internship', 'internship.company', 'internship.skill'])->refresh();
+            return $application->fresh(['internship', 'internship.company', 'internship.skill']);
         });
+
+        $internship->load(['company.user']);
+
+        $internship->company->user->notify(new NewApplicationCompanyNotification($application));
+
+        return $application;
     }
 
     /**
