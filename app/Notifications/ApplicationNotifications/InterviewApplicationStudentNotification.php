@@ -40,7 +40,7 @@ class InterviewApplicationStudentNotification extends Notification implements Sh
 
         return (new MailMessage)
             ->subject("Congratulations! Your Application Was Accepted")
-            ->view('emails.application.application-accepted', [
+            ->view('emails.application.application-interview', [
                 'userName' => $this->application->student->first_name,
                 'companyName' => $this->application->internship->company->company_name,
                 'internshipTitle' => $this->application->internship->title,
@@ -59,7 +59,7 @@ class InterviewApplicationStudentNotification extends Notification implements Sh
             'type' => NotificationTypeEnum::Info->value,
             'application_id' => $this->application->id,
             'title' => 'Application Proceeded to next stage',
-            'message' => "Your application for {$this->application->internship->title} has been accepted and will proceed to next stage!",
+            'message' => "Your application for {$this->application->internship->title} has been accepted to proceed in interview!",
         ];
     }
 }

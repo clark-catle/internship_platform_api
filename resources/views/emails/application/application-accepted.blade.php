@@ -15,7 +15,7 @@
             <td style="padding:32px;">
 
               <h2 style="margin-top:0; color:#111827;">
-                Congratulations! Your application was accepted and will proceed to next stage
+                Congratulations! Your application was accepted
               </h2>
 
               <p style="color:#374151; font-size:14px; line-height:1.6;">
@@ -23,12 +23,12 @@
               </p>
 
               <p style="color:#374151; font-size:14px; line-height:1.6;">
-                Great news! <strong>{{ $companyName }}</strong> has accepted your application for the
+                Great news! <strong>{{ $companyName }}</strong> has officially accepted your application for the internship position
                 <strong>{{ $internshipTitle }}</strong>.
               </p>
 
               <p style="color:#374151; font-size:14px; line-height:1.6;">
-                Please review your application details for any additional information or next steps provided by the company.
+                You have been selected for the internship. Please review your application details for any additional information and next steps from the company.
               </p>
 
               <table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0;">
@@ -42,7 +42,7 @@
               </table>
 
               <p style="color:#6b7280; font-size:12px; line-height:1.6;">
-                Please make sure to check your application for any instructions from the company regarding the next steps.
+                Please check your application for any instructions regarding your internship and the next steps you need to take.
               </p>
 
               <p style="color:#9ca3af; font-size:12px;">

@@ -17,6 +17,7 @@ use App\Models\Application;
 use App\Models\Internship;
 use App\Models\Student;
 use App\Models\User;
+use App\Notifications\ApplicationNotifications\ApplicationAcceptedStudentNotification;
 use App\Notifications\ApplicationNotifications\ApplicationInReviewStudentNotification;
 use App\Notifications\ApplicationNotifications\DecideApplicationStudentNotification;
 use App\Notifications\ApplicationNotifications\InterviewApplicationStudentNotification;
@@ -278,26 +279,28 @@ class ApplicationService
      */
     public function acceptApplication(Application $application)
     {
-        return DB::transaction(function () use ($application) {
-            $this->ensureApplicationNotRejected($application);
+        $this->ensureApplicationNotRejected($application);
 
-            if ($application->progress !== ApplicationProgressEnum::Decision)
-                throw new Exception('The application must be in the decision stage before it can be marked as accepted!');
+        if ($application->progress !== ApplicationProgressEnum::Decision)
+            throw new Exception('The application must be in the decision stage before it can be marked as accepted!');
 
-            $this->ensureApplicationNotAccepted($application);
+        $this->ensureApplicationNotAccepted($application);
 
-            $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::Accepted);
+        DB::transaction(fn() => $this->applicationRepo
+            ->updateApplicationStatus(
+                $application,
+                ApplicationStatusEnum::Accepted
+            ));
 
-            ApplicationAcceptedMailJob::dispatch($application);
+        $application->student->user->notify(new ApplicationAcceptedStudentNotification($application));
 
-            return $application->load([
-                'student',
-                'student.course',
-                'student.skill',
-                'internship',
-                'internship.skill'
-            ]);
-        });
+        return $application->load([
+            'student',
+            'student.course',
+            'student.skill',
+            'internship',
+            'internship.skill'
+        ]);
     }
 
     /**
