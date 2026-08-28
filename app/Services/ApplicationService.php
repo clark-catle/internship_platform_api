@@ -18,6 +18,7 @@ use App\Models\Internship;
 use App\Models\Student;
 use App\Models\User;
 use App\Notifications\ApplicationNotifications\ApplicationInReviewStudentNotification;
+use App\Notifications\ApplicationNotifications\DecideApplicationStudentNotification;
 use App\Notifications\ApplicationNotifications\InterviewApplicationStudentNotification;
 use App\Notifications\ApplicationNotifications\NewApplicationCompanyNotification;
 use App\Repositories\ApplicationRepository;
@@ -65,12 +66,10 @@ class ApplicationService
 
             $application = $this->applicationRepo->applyInternship($student->id, $resume_id, $internship->id);
 
-            RecalculateJobForActiveStatus::dispatch($application->internship);
-
             return $application->fresh(['internship', 'internship.company', 'internship.skill']);
         });
 
-        $internship->load(['company.user']);
+        RecalculateJobForActiveStatus::dispatch($application->internship);
 
         $internship->company->user->notify(new NewApplicationCompanyNotification($application));
 
@@ -108,16 +107,14 @@ class ApplicationService
     }
 
     /**
-     * ready and load the needed `$application` info base on the `$user` role that was passed, 
+     * ready and load the needed `$application` info base on the `$role` role that was passed, 
      * if the `$role` is company, it will update the status of the application into in review
      * @param Application $application
-     * @param User $user
+     * @param UserRoleEnum
      * @return Application|null
      */
-    public function viewApplication(Application $application, User $user)
+    public function viewApplication(Application $application, UserRoleEnum $role)
     {
-        $role = $user->role;
-
         switch ($role) {
             case UserRoleEnum::Student:
                 return $application->load([
@@ -127,7 +124,7 @@ class ApplicationService
                 ]);
 
             case UserRoleEnum::Company:
-                return $this->companyViewApplication($application, $user);
+                return $this->companyViewApplication($application);
 
             case UserRoleEnum::Admin:
                 return $application->load([
@@ -150,7 +147,7 @@ class ApplicationService
      * @param Application $application
      * @throws Exception
      */
-    private function companyViewApplication(Application $application, User $user)
+    private function companyViewApplication(Application $application)
     {
 
         if ($application->status === ApplicationStatusEnum::Pending) {
@@ -164,7 +161,7 @@ class ApplicationService
 
             RecalculateJobForActiveStatus::dispatch($application->internship);
 
-            $user->notify(new ApplicationInReviewStudentNotification($application));
+            $application->student->user->notify(new ApplicationInReviewStudentNotification($application));
         }
 
         return $application->load([
@@ -206,7 +203,7 @@ class ApplicationService
         else if ($application->progress === ApplicationProgressEnum::Decision)
             throw new Exception('The application interview is already completed!');
 
-        $application = DB::transaction(fn(): Application => $this->applicationRepo
+        DB::transaction(fn(): Application => $this->applicationRepo
             ->updateApplicationProgress(
                 $application,
                 ApplicationProgressEnum::Interview
@@ -233,27 +230,29 @@ class ApplicationService
      */
     public function decideApplication(Application $application)
     {
-        return DB::transaction(function () use ($application) {
-            $this->ensureApplicationNotRejected($application);
+        $this->ensureApplicationNotRejected($application);
 
-            // ensure the progress is "interview" to proceed
-            if ($application->progress === ApplicationProgressEnum::Applied)
-                throw new Exception('The application should complete interview stage first!');
-            else if ($application->progress === ApplicationProgressEnum::Decision)
-                throw new Exception('The application is already in the final decision stage!');
+        // ensure the progress is "interview" to proceed
+        if ($application->progress === ApplicationProgressEnum::Applied)
+            throw new Exception('The application should complete interview stage first!');
+        else if ($application->progress === ApplicationProgressEnum::Decision)
+            throw new Exception('The application is already in the final decision stage!');
 
-            $this->applicationRepo->updateApplicationProgress($application, ApplicationProgressEnum::Decision);
+        DB::transaction(fn() => $this->applicationRepo
+            ->updateApplicationProgress(
+                $application,
+                ApplicationProgressEnum::Decision
+            ));
 
-            ApplicationDecisionStageMailJob::dispatch($application);
+        $application->student->user->notify(new DecideApplicationStudentNotification($application));
 
-            return $application->load([
-                'student',
-                'student.course',
-                'student.skill',
-                'internship',
-                'internship.skill'
-            ]);
-        });
+        return $application->load([
+            'student',
+            'student.course',
+            'student.skill',
+            'internship',
+            'internship.skill'
+        ]);
     }
 
     /**

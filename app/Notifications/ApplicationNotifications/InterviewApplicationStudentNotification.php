@@ -56,7 +56,7 @@ class InterviewApplicationStudentNotification extends Notification implements Sh
     public function toArray(object $notifiable): array
     {
         return [
-            'type' => NotificationTypeEnum::Success->value,
+            'type' => NotificationTypeEnum::Info->value,
             'application_id' => $this->application->id,
             'title' => 'Application Proceeded to next stage',
             'message' => "Your application for {$this->application->internship->title} has been accepted and will proceed to next stage!",

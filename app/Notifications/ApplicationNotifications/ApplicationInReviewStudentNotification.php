@@ -56,10 +56,10 @@ class ApplicationInReviewStudentNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'type' => NotificationTypeEnum::Success->value,
+            'type' => NotificationTypeEnum::Info->value,
             'application_id' => $this->application->id,
             'title' => 'Application Viewed',
-            'message' => "Your application for {$this->application->internship->title} has been viewed!",
+            'message' => "Your application for {$this->application->internship->title} has been viewed by the company!",
         ];
     }
 }

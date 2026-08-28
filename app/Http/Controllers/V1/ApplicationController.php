@@ -53,9 +53,7 @@ class ApplicationController extends Controller
     {
         $this->authorize('viewResumeApplication', $application);
 
-        $user = request()->user();
-
-        $application = $this->applicationService->viewApplication($application, $user);
+        $application = $this->applicationService->viewApplication($application, request()->user()->role);
 
         return ApplicationResource::make($application);
     }
