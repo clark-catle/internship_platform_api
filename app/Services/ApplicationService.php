@@ -18,6 +18,7 @@ use App\Models\Internship;
 use App\Models\Student;
 use App\Models\User;
 use App\Notifications\ApplicationNotifications\ApplicationInReviewStudentNotification;
+use App\Notifications\ApplicationNotifications\InterviewApplicationStudentNotification;
 use App\Notifications\ApplicationNotifications\NewApplicationCompanyNotification;
 use App\Repositories\ApplicationRepository;
 use Exception;
@@ -197,27 +198,29 @@ class ApplicationService
      */
     public function interviewApplication(Application $application)
     {
-        return DB::transaction(function () use ($application) {
-            $this->ensureApplicationNotRejected($application);
+        $this->ensureApplicationNotRejected($application);
 
-            // ensure the progress is "applied" to proceed
-            if ($application->progress === ApplicationProgressEnum::Interview)
-                throw new Exception('The application has already been advanced to the interview stage!');
-            else if ($application->progress === ApplicationProgressEnum::Decision)
-                throw new Exception('The application interview is already completed!');
+        // ensure the progress is "applied" to proceed
+        if ($application->progress === ApplicationProgressEnum::Interview)
+            throw new Exception('The application has already been advanced to the interview stage!');
+        else if ($application->progress === ApplicationProgressEnum::Decision)
+            throw new Exception('The application interview is already completed!');
 
-            $this->applicationRepo->updateApplicationProgress($application, ApplicationProgressEnum::Interview);
+        $application = DB::transaction(fn(): Application => $this->applicationRepo
+            ->updateApplicationProgress(
+                $application,
+                ApplicationProgressEnum::Interview
+            ));
 
-            ApplicationInterviewMailJob::dispatch($application);
+        $application->student->user->notify(new InterviewApplicationStudentNotification($application));
 
-            return $application->load([
-                'student',
-                'student.course',
-                'student.skill',
-                'internship',
-                'internship.skill'
-            ]);
-        });
+        return $application->load([
+            'student',
+            'student.course',
+            'student.skill',
+            'internship',
+            'internship.skill'
+        ]);
     }
 
     /**

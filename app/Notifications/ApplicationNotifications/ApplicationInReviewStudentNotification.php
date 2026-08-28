@@ -59,7 +59,7 @@ class ApplicationInReviewStudentNotification extends Notification
             'type' => NotificationTypeEnum::Success->value,
             'application_id' => $this->application->id,
             'title' => 'Application Viewed',
-            'message' => "Your application for {$this->application->internship->title} has been viewed",
+            'message' => "Your application for {$this->application->internship->title} has been viewed!",
         ];
     }
 }

@@ -58,7 +58,7 @@ class NewApplicationCompanyNotification extends Notification implements ShouldQu
             'type' => NotificationTypeEnum::Info->value,
             'application_id' => $this->application->id,
             'title' => 'New Application',
-            'message' => "You received a new application for {$this->application->internship->title}",
+            'message' => "You received a new application for {$this->application->internship->title}!",
         ];
     }
 }
