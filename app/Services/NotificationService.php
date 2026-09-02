@@ -46,4 +46,9 @@ class NotificationService
     {
         DB::transaction(fn() => $this->notifRepo->markAsRead($notif));
     }
+
+    public function markAllRead(User $user)
+    {
+        DB::transaction(fn() => $this->notifRepo->markAllRead($user));
+    }
 }

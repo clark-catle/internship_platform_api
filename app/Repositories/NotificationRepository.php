@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use Illuminate\Notifications\DatabaseNotification;
 
 class NotificationRepository
@@ -22,5 +23,12 @@ class NotificationRepository
     public function markAsRead(DatabaseNotification $notif)
     {
         $notif->markAsRead();
+    }
+
+    public function markAllRead(User $user)
+    {
+        $user->unreadNotifications()
+            ->where('read_at', null)
+            ->update(['read_at' => now()]);
     }
 }

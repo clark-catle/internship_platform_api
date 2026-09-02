@@ -48,4 +48,15 @@ class NotificationController extends Controller
 
         return NotificationResource::make($notif);
     }
+
+    public function markAllRead()
+    {
+        $user = request()->user();
+
+        $this->notifService->markAllRead($user);
+
+        return response()->json([
+            'message' => "All unread notification has been marked as read"
+        ]);
+    }
 }
