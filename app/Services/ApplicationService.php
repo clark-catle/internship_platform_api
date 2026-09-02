@@ -22,6 +22,7 @@ use App\Notifications\ApplicationNotifications\ApplicationInReviewStudentNotific
 use App\Notifications\ApplicationNotifications\DecideApplicationStudentNotification;
 use App\Notifications\ApplicationNotifications\InterviewApplicationStudentNotification;
 use App\Notifications\ApplicationNotifications\NewApplicationCompanyNotification;
+use App\Notifications\ApplicationNotifications\ReconsideredApplicationStudentNotification;
 use App\Notifications\ApplicationNotifications\RejectApplicationStudentNotification;
 use App\Repositories\ApplicationRepository;
 use Exception;
@@ -313,23 +314,25 @@ class ApplicationService
      */
     public function rejectApplication(Application $application)
     {
-        return DB::transaction(function () use ($application) {
-            $this->ensureApplicationNotRejected($application);
+        $this->ensureApplicationNotRejected($application);
 
-            $this->ensureApplicationNotAccepted($application);
+        $this->ensureApplicationNotAccepted($application);
 
-            $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::Rejected);
+        DB::transaction(fn() => $this->applicationRepo
+            ->updateApplicationStatus(
+                $application,
+                ApplicationStatusEnum::Rejected
+            ));
 
-            $application->student->user->notify(new RejectApplicationStudentNotification($application));
+        $application->student->user->notify(new RejectApplicationStudentNotification($application));
 
-            return $application->load([
-                'student',
-                'student.course',
-                'student.skill',
-                'internship',
-                'internship.skill'
-            ]);
-        });
+        return $application->load([
+            'student',
+            'student.course',
+            'student.skill',
+            'internship',
+            'internship.skill'
+        ]);
     }
 
     /**
@@ -340,23 +343,33 @@ class ApplicationService
      */
     public function revertRejectApplication(Application $application)
     {
-        return DB::transaction(function () use ($application) {
-            $this->ensureApplicationNotAccepted($application);
+        $this->ensureApplicationNotAccepted($application);
 
-            if ($application->status !== ApplicationStatusEnum::Rejected)
-                throw new Exception("The application isn't rejected!");
+        if ($application->status !== ApplicationStatusEnum::Rejected)
+            throw new Exception("The application isn't rejected!");
 
-            $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::InReview);
+        DB::transaction(function () use ($application) {
+            $this->applicationRepo
+                ->updateApplicationStatus(
+                    $application,
+                    ApplicationStatusEnum::InReview
+                );
 
-            RevertRejectedApplicationMailJob::dispatch($application);
-
-            return $application->load([
-                'student',
-                'student.course',
-                'student.skill',
-                'internship',
-                'internship.skill'
-            ]);
+            $this->applicationRepo
+                ->updateApplicationProgress(
+                    $application,
+                    ApplicationProgressEnum::Applied
+                );
         });
+
+        $application->student->user->notify(new ReconsideredApplicationStudentNotification($application));
+
+        return $application->load([
+            'student',
+            'student.course',
+            'student.skill',
+            'internship',
+            'internship.skill'
+        ]);
     }
 }
