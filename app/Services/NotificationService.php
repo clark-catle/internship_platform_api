@@ -47,8 +47,23 @@ class NotificationService
         DB::transaction(fn() => $this->notifRepo->markAsRead($notif));
     }
 
+    /**
+     * all the unread notification of `$user` will be marked as read
+     * @param User $user
+     * @return void
+     */
     public function markAllRead(User $user)
     {
         DB::transaction(fn() => $this->notifRepo->markAllRead($user));
+    }
+
+    /**
+     * deletes the `$notif`
+     * @param DatabaseNotification $notif
+     * @return void
+     */
+    public function deleteNotif(DatabaseNotification $notif)
+    {
+        DB::transaction(fn() => $this->notifRepo->deleteNotif($notif));
     }
 }

@@ -31,13 +31,9 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('api', fn(Request $request) => Limit::perMinute(20)->by($request->user()->id ?? $request->ip()));
 
         /**
-         * connecting the notification policy class to database notification class because
-         * notification isnt a model that lets laravel find the policy automatically
-         */
-        Gate::policy(DatabaseNotification::class, NotificationPolicy::class);
-
-        /**
-         * custom route bind for notification because notification isnt a model
+         * custom route bind for notification because notification isnt a model,
+         * policy isnt needed because the fetching of notification is based on the
+         * current user, so if notification of other user was called, it wouldnt return a value
          */
         Route::bind(
             'notification',

@@ -39,5 +39,6 @@ Route::prefix('user')->group(function () {
     Route::get('/unreadCount', [NotificationController::class, 'unreadCount'])->name('unreadCount');
     Route::patch('/{notification}/read', [NotificationController::class, 'markAsRead'])->name('markAsRead');
     Route::patch('/markAllRead', [NotificationController::class, 'markAllRead'])->name('markAllRead');
+    Route::delete('/{notification}', [NotificationController::class, 'deleteNotif'])->name('deleteNotif');
   });
 });

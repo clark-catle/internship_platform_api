@@ -42,13 +42,12 @@ class NotificationController extends Controller
     #[Endpoint(title: 'User view specific notification', description: 'The user can view the specific notification and that notification will be marked as read')]
     public function markAsRead(DatabaseNotification $notif)
     {
-        $this->authorize('userNotification', $notif);
-
         $this->notifService->markAsRead($notif);
 
         return NotificationResource::make($notif);
     }
 
+    #[Endpoint(title: 'User mark all read', description: 'The user can mark all the unread notification as read')]
     public function markAllRead()
     {
         $user = request()->user();
@@ -57,6 +56,16 @@ class NotificationController extends Controller
 
         return response()->json([
             'message' => "All unread notification has been marked as read"
+        ]);
+    }
+
+    #[Endpoint(title: 'User delete notification', description: 'The user can permanently delete a notification')]
+    public function deleteNotif(DatabaseNotification $notif)
+    {
+        $this->notifService->deleteNotif($notif);
+
+        return response()->json([
+            'message' => "The notification has been deleted permanently!"
         ]);
     }
 }
