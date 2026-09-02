@@ -22,6 +22,7 @@ use App\Notifications\ApplicationNotifications\ApplicationInReviewStudentNotific
 use App\Notifications\ApplicationNotifications\DecideApplicationStudentNotification;
 use App\Notifications\ApplicationNotifications\InterviewApplicationStudentNotification;
 use App\Notifications\ApplicationNotifications\NewApplicationCompanyNotification;
+use App\Notifications\ApplicationNotifications\RejectApplicationStudentNotification;
 use App\Repositories\ApplicationRepository;
 use Exception;
 use Illuminate\Http\UploadedFile;
@@ -319,7 +320,7 @@ class ApplicationService
 
             $this->applicationRepo->updateApplicationStatus($application, ApplicationStatusEnum::Rejected);
 
-            ApplicationRejectedMailJob::dispatch($application);
+            $application->student->user->notify(new RejectApplicationStudentNotification($application));
 
             return $application->load([
                 'student',
