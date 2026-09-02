@@ -28,6 +28,16 @@ class NotificationService
     }
 
     /**
+     * returns the count of unread notification the `$user` has
+     * @param User $user
+     * @return int
+     */
+    public function unreadCount(User $user)
+    {
+        return $user->unreadNotifications()->count();
+    }
+
+    /**
      * mark the `$notif` as read
      * @param DatabaseNotification $notif
      * @return void

@@ -27,6 +27,18 @@ class NotificationController extends Controller
         return NotificationResource::collection($notifications);
     }
 
+    #[Endpoint(title: 'User unread notification count', description: 'The user can get the count of unread notification')]
+    public function unreadCount()
+    {
+        $user = request()->user();
+
+        $count = $this->notifService->unreadCount($user);
+
+        return response()->json([
+            'unread_count' => $count
+        ]);
+    }
+
     #[Endpoint(title: 'User view specific notification', description: 'The user can view the specific notification and that notification will be marked as read')]
     public function markAsRead(DatabaseNotification $notif)
     {

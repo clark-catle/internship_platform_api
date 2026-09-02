@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\V1\ApplicationController;
 use App\Http\Controllers\V1\CompanyController;
-use App\Http\Controllers\V1\FileController;
 use App\Http\Controllers\V1\InternshipController;
 use App\Http\Controllers\V1\NotificationController;
 use App\Http\Controllers\V1\PasswordController;
@@ -37,6 +36,7 @@ Route::prefix('user')->group(function () {
   // notification
   Route::prefix('notification')->group(function () {
     Route::get('/', [NotificationController::class, 'getAllNotification'])->name('getAllNotification');
+    Route::get('/unreadCount', [NotificationController::class, 'unreadCount'])->name('unreadCount');
     Route::patch('/{notification}/read', [NotificationController::class, 'markAsRead'])->name('markAsRead');
   });
 });
