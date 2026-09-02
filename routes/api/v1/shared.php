@@ -37,5 +37,6 @@ Route::prefix('user')->group(function () {
   // notification
   Route::prefix('notification')->group(function () {
     Route::get('/', [NotificationController::class, 'getAllNotification'])->name('getAllNotification');
+    Route::patch('/{notification}/read', [NotificationController::class, 'markAsRead'])->name('markAsRead');
   });
 });
