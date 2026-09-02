@@ -4,6 +4,7 @@ use App\Http\Controllers\V1\ApplicationController;
 use App\Http\Controllers\V1\CompanyController;
 use App\Http\Controllers\V1\FileController;
 use App\Http\Controllers\V1\InternshipController;
+use App\Http\Controllers\V1\NotificationController;
 use App\Http\Controllers\V1\PasswordController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,4 +33,9 @@ Route::prefix('user')->group(function () {
   Route::post('/forgotPassword', [PasswordController::class, 'sendForgotPassword'])->name('sendForgotPassword');
   Route::patch('/resetPassword', [PasswordController::class, 'resetPassword'])->name('resetPassword');
   Route::patch('/changePassword', [PasswordController::class, 'changePassword'])->name('changePassword');
+
+  // notification
+  Route::prefix('notification')->group(function () {
+    Route::get('/', [NotificationController::class, 'getAllNotification'])->name('getAllNotification');
+  });
 });
