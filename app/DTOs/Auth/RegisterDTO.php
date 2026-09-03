@@ -26,4 +26,13 @@ class RegisterDTO
             role: UserRoleEnum::from($validated['role']),
         );
     }
+
+    public static function createAdmin(string $email, string $password)
+    {
+        return new self(
+            email: $email,
+            password: $password,
+            role: UserRoleEnum::Admin,
+        );
+    }
 }

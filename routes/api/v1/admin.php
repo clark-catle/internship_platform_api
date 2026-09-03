@@ -13,6 +13,7 @@ Route::middleware(['role:admin'])->group(function () {
   Route::delete('/internship/{internship}/forceRemove', [InternshipController::class, 'forceRemove'])->name('forceRemove');
 
   Route::prefix('createAdmin')->group(function () {
-    Route::post('/', [UserController::class, 'createAdmin'])->name('createAdmin');
+    Route::post('/', [UserController::class, 'createToken'])->name('createToken');
+    Route::post('/register', [UserController::class, 'registerAdmin'])->name('registerAdmin');
   });
 });

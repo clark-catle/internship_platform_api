@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\UserRequests;
+namespace App\Http\Requests\AdminRequests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class AdminCreationRequest extends FormRequest
+class CreateTokenForAdminCreation extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

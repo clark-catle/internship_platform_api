@@ -11,7 +11,10 @@ class UserRepository
     /**
      * Create a new class instance.
      */
-    public function __construct(private User $user) {}
+    public function __construct(
+        private User $user,
+        private AdminCreation $adminCreation
+    ) {}
 
     /**
      * update the status of the `$user` base on the passed `$status`
@@ -44,9 +47,19 @@ class UserRepository
      */
     public function createAdminCreationToken(string $token)
     {
-        return AdminCreation::create([
+        return $this->adminCreation::create([
             'token' => $token,
             'expires_at' => now()->addMinutes(30)
         ]);
+    }
+
+    /**
+     * deletes the `$token` in admin creation table
+     * @param string $token
+     * @return void
+     */
+    public function removeAdminCreationToken(string $token)
+    {
+        $this->adminCreation->where('token', $token)->delete();
     }
 }

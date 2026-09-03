@@ -28,8 +28,6 @@ class AuthService
         return DB::transaction(function () use ($data) {
             $newUser = $this->authRepo->create($data);
 
-            SendWelcomeMailJob::dispatch($newUser);
-
             return $newUser;
         });
     }
@@ -51,5 +49,12 @@ class AuthService
             'token' => $user->createToken('main')->plainTextToken,
             'user' => $user
         ];
+    }
+
+    public function registerAdmin(RegisterDTO $data, string $token)
+    {
+        DB::transaction(function () use ($data) {
+            $newUser = $this->authRepo->create($data);
+        });
     }
 }

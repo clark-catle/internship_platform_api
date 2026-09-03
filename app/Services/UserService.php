@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTOs\User\ChangePasswordDTO;
+use App\DTOs\User\RegisterAdminDTO;
 use App\DTOs\User\ResetPasswordDTO;
 use App\Enum\User\UserRoleEnum;
 use App\Enum\User\UserStatusEnum;
@@ -126,10 +127,10 @@ class UserService
      * @param string $email
      * @return string
      */
-    public function createAdmin(string $email)
+    public function createToken(string $email)
     {
         $token = Str::random(64);
-        $url =  config('app.frontend_url') . "/createAdmin/$token";
+        $url =  config('app.frontend_url') . "/registerAdmin/$token";
 
         DB::transaction(function () use ($token, $email, $url) {
             $this->userRepo->createAdminCreationToken($token);
