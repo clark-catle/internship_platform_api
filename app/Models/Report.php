@@ -9,7 +9,7 @@ use App\Enum\Report\ReportStatusEnum;
 #[Fillable(['description', 'status', 'admin_notes', 'read_at'])]
 class Report extends Model
 {
-    public function casts()
+    protected function casts()
     {
         return [
             'status' => ReportStatusEnum::class,

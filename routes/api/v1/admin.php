@@ -11,4 +11,8 @@ Route::middleware(['role:admin'])->group(function () {
   Route::patch('/company/{company}/verify', [CompanyController::class, 'changeVerification'])->name('changeVerification');
 
   Route::delete('/internship/{internship}/forceRemove', [InternshipController::class, 'forceRemove'])->name('forceRemove');
+
+  Route::prefix('createAdmin')->group(function () {
+    Route::post('/', [UserController::class, 'createAdmin'])->name('createAdmin');
+  });
 });

@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Mail\ApplicationMails;
+namespace App\Mail;
 
-use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -11,14 +10,19 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class StudentInreviewMail extends Mailable
+class AdminCreationMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(public User $user) {}
+    public function __construct(
+        public string $email,
+        public string $creationUrl,
+    ) {
+        //
+    }
 
     /**
      * Get the message envelope.
@@ -26,7 +30,7 @@ class StudentInreviewMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Student Inreview Mail',
+            subject: 'Administrator Account Invitation',
         );
     }
 
@@ -36,7 +40,7 @@ class StudentInreviewMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.admin.admin-invitation',
         );
     }
 

@@ -10,7 +10,7 @@ use App\Enum\Application\ApplicationStatusEnum;
 #[Fillable(['applied_at', 'student_id', 'resume_id', 'internship_id', 'status', 'progress'])]
 class Application extends Model
 {
-    public function casts()
+    protected function casts()
     {
         return [
             'status' => ApplicationStatusEnum::class,

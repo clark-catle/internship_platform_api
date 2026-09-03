@@ -6,13 +6,15 @@ use App\DTOs\User\ChangePasswordDTO;
 use App\DTOs\User\ResetPasswordDTO;
 use App\Enum\User\UserRoleEnum;
 use App\Enum\User\UserStatusEnum;
-use App\Jobs\UserJobs\ChangeUserStatusMailJob;
+use App\Mail\AdminCreationMail;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class UserService
 {
@@ -31,8 +33,6 @@ class UserService
     {
         return DB::transaction(function () use ($status, $user) {
             $this->userRepo->changeStatus($status, $user);
-
-            ChangeUserStatusMailJob::dispatch($user);
 
             $load = null;
 
@@ -118,5 +118,25 @@ class UserService
 
             $this->logout($user);
         });
+    }
+
+    /**
+     * creates an url and send the url with token in the `$email`
+     * of the user and returning it
+     * @param string $email
+     * @return string
+     */
+    public function createAdmin(string $email)
+    {
+        $token = Str::random(64);
+        $url =  config('app.frontend_url') . "/createAdmin/$token";
+
+        DB::transaction(function () use ($token, $email, $url) {
+            $this->userRepo->createAdminCreationToken($token);
+
+            Mail::to($email)->send(new AdminCreationMail($email, $url));
+        });
+
+        return $url;
     }
 }

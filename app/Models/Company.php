@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 class Company extends Model
 {
 
-    public function casts(): array
+    protected function casts(): array
     {
         return [
             'is_verified' => 'boolean'

@@ -12,6 +12,21 @@
 
 
 namespace App\Models{
+
+    use Carbon\Carbon;
+
+/**
+ * @property string $token
+ * @property Carbon $expires_at
+ * @property Carbon $used_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminCreation newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminCreation newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AdminCreation query()
+ */
+	class AdminCreation extends \Eloquent {}
+}
+
+namespace App\Models{
 /**
  * @property int $id
  * @property \App\Enum\Application\ApplicationStatusEnum $status

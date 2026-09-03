@@ -15,7 +15,7 @@ class Internship extends Model
 {
     use SoftDeletes;
 
-    public function casts(): array
+    protected function casts(): array
     {
         return [
             'setup' => InternshipSetupEnum::class,
