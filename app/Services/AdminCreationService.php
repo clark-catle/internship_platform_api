@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTOs\Auth\RegisterDTO;
 use App\Mail\AdminMail\AdminCreationMail as AdminMailAdminCreationMail;
+use App\Models\AdminCreation;
 use App\Repositories\AdminCreationRepository;
 use App\Repositories\AuthRepository;
 use Exception;
@@ -45,7 +46,12 @@ class AdminCreationService
     }
 
     /**
-     * 
+     * register thhe new user base on the info in `$data`, this should
+     * already have a admin role, before proceeding, it will check
+     * if the `$token` is already used or already expired for validation,
+     * didnt add the "if token exists" because the RegisterAdminRequest
+     * request already handles that, then it will delete theh token
+     * first before proceeding with the registration then retuns it
      * @param RegisterDTO $data
      * @param string $token
      * @throws Exception
@@ -70,10 +76,20 @@ class AdminCreationService
 
     /**
      * returnn all the info of Admin Creation table
-     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\AdminCreation>
+     * @return \Illuminate\Database\Eloquent\Collection<int, AdminCreation>
      */
     public function viewAllToken()
     {
         return $this->adminCreateRepo->viewAll();
+    }
+
+    /**
+     * removes the `$info` record in the database
+     * @param AdminCreation $info
+     * @return void
+     */
+    public function deleteToken(AdminCreation $info)
+    {
+        DB::transaction(fn() => $this->adminCreateRepo->removeAdminCreation($info));
     }
 }

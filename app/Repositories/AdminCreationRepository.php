@@ -29,16 +29,6 @@ class AdminCreationRepository
     }
 
     /**
-     * deletes the `$token` in admin creation table
-     * @param string $token
-     * @return void
-     */
-    public function removeAdminCreationByToken(string $token)
-    {
-        $this->adminCreation->where('token', $token)->delete();
-    }
-
-    /**
      * gets the info in Admin Creation Table by its '$token' value
      * @param string $token
      * @return AdminCreation|\stdClass|null

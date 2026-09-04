@@ -8,6 +8,7 @@ use App\Http\Requests\AdminRequests\CreateTokenForAdminCreation;
 use App\Http\Requests\AdminRequests\RegisterAdminRequest;
 use App\Http\Resources\AdminCreationResource;
 use App\Http\Resources\UserResource;
+use App\Models\AdminCreation;
 use App\Services\AdminCreationService;
 use Dedoc\Scramble\Attributes\Endpoint;
 
@@ -36,7 +37,7 @@ class AdminCreationController extends Controller
         $url = $this->adminCreateService->createToken($email);
 
         return response()->json([
-            'message' => 'Url has been created and was sent successfully, this will expire in 30 minutes',
+            'message' => 'Url has been created and was sent successfully to the email provided, this will expire in 30 minutes!',
             'url' => $url
         ]);
     }
@@ -51,6 +52,16 @@ class AdminCreationController extends Controller
             ->registerAdmin($data, $validated['token']);
 
         return UserResource::make($newUser);
+    }
+
+    #[Endpoint(title: 'Delete token', description: 'The admin can delete a token manually')]
+    public function deleteToken(AdminCreation $adminCreation)
+    {
+        $this->adminCreateService->deleteToken($adminCreation);
+
+        return response()->json([
+            'message' => 'The token has been deleted successfully!',
+        ]);
     }
 
     // viewing of own profile should be used in a single api
