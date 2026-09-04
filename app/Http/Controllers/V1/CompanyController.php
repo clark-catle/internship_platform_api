@@ -40,7 +40,7 @@ class CompanyController extends Controller
     }
 
 
-    #[Endpoint(title: 'Edit Company Info', description: 'The user that has company role can edit their info about their company')]
+    #[Endpoint(title: 'Edit Company Info', description: 'The user that has company role can edit their info about their company, after the update, it will only return the company info')]
     public function editCompany(EditCompanyRequest $request)
     {
         $validated = EditCompanyDTO::fromRequest($request);
@@ -50,16 +50,28 @@ class CompanyController extends Controller
 
         return response()->json([
             'message' => 'Company info has been updated successfully',
-            'information' => UserResource::make($company)
+            'information' => CompanyResource::make($company)
         ]);
     }
 
-    #[Endpoint(title: 'Get Company info', description: 'The user that has a company role can get their user info with their company info')]
+    #[Endpoint(title: 'Get Company info', description: 'The user that has a company role can get their user info with their company info only')]
     public function getCompany()
     {
         $user = request()->user();
 
-        return UserResource::make($this->companyService->getCompany($user));
+        $company = $this->companyService->getCompany($user);
+
+        if (!$company)
+            return response()->json([]);
+
+        return CompanyResource::make($company);
+    }
+
+
+    #[Endpoint(title: 'Get own company logo', description: 'The user that is a company user can get their ownt logo')]
+    public function getLogo()
+    {
+        return $this->companyService->getLogo(request()->user());
     }
 
     #[Endpoint(title: 'View all company', description: 'The user can freely view all company as long as the user isnt a company role and will only return info of the company')]
@@ -68,7 +80,7 @@ class CompanyController extends Controller
         return CompanyResource::collection($this->companyService->getAllCompany());
     }
 
-    #[Endpoint(title: 'View specific company', description: 'The user can freely view other specific company as long as the user isn\'t a company role and will only return info of the company')]
+    #[Endpoint(title: 'View specific company', description: 'The user can freely view other specific company as long as the user isn\'t a company role and will only return info of the company, this is not accessible by the company role')]
     public function viewSpecificCompany(Company $company)
     {
         return CompanyResource::make($company);
@@ -78,12 +90,6 @@ class CompanyController extends Controller
     public function getCompanyLogo(Company $company)
     {
         return $this->fileService->getFile($company->logo);
-    }
-
-    #[Endpoint(title: 'Get own company logo', description: 'The user that is a company user can get their ownt logo')]
-    public function getLogo()
-    {
-        return $this->companyService->getLogo(request()->user());
     }
 
     #[Endpoint(title: 'Change company verification', description: 'The user that is an admin can change the company verification value')]

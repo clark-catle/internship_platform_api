@@ -92,7 +92,7 @@ class StudentService
             if (filled($data->skills_id) || filled($data->other_skills))
                 $this->skillService->processStudentSkill($student, $data->skills_id, $data->other_skills);
 
-            return $user->load(['student', 'student.course', 'student.skill']);
+            return $student;
         });
     }
 

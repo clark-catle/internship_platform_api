@@ -40,7 +40,7 @@ class StudentController extends Controller
 
         return response()->json([
             'message' => 'Student info has been updated successfully',
-            'information' => UserResource::make($val)
+            'information' => StudentResource::make($val)
         ]);
     }
 

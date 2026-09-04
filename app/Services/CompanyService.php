@@ -8,6 +8,7 @@ use App\Enum\File\FileCategoryEnum;
 use App\Jobs\CompanyJobs\CompanyVerificationMailJob;
 use App\Models\User;
 use App\Models\Company;
+use App\Notifications\CompanyNotifications\CompanyVerificationNotification;
 use App\Repositories\CompanyRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\DB;
@@ -79,6 +80,7 @@ class CompanyService
      * then it will return the company
      * @param EditCompanyDTO $data
      * @param User $user
+     * @return Company
      */
     public function editCompany(EditCompanyDTO $data, User $user)
     {
@@ -100,7 +102,7 @@ class CompanyService
             if ($newFile)
                 $this->fileService->removeFileById($oldLogoId);
 
-            return $user->load('company');
+            return $company;
         });
     }
 
@@ -108,13 +110,14 @@ class CompanyService
      * returns a company info base on the passed `$user`
      * @param User $user
      * @throws ConflictHttpException
-     * @return User|null
+     * @return Company|null
      */
     public function getCompany(User $user)
     {
-        $this->ensureCompanyExist($user);
+        if (!$this->companyRepo->companyExist($user))
+            return null;
 
-        return $user->load('company');
+        return $user->company;
     }
 
     /**
@@ -153,7 +156,7 @@ class CompanyService
 
             $company->load(['user']);
 
-            CompanyVerificationMailJob::dispatch($company->user);
+            $company->user->notify(new CompanyVerificationNotification($company));
 
             return $company;
         });
