@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers\V1;
 
-use App\DTOs\Auth\RegisterDTO;
 use App\Enum\User\UserStatusEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AdminRequests\CreateTokenForAdminCreation;
-use App\Http\Requests\AdminRequests\RegisterAdminRequest;
 use App\Http\Requests\UserRequests\UserChangeStatusRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -30,26 +27,5 @@ class UserController extends Controller
         $user = $this->userService->userChangeStatus($status, $user);
 
         return UserResource::make($user);
-    }
-
-    #[Endpoint(title: 'Create Admin', description: 'The admin can create a admin creation token that will be used for user creation that role is an admin')]
-    public function createToken(CreateTokenForAdminCreation $request)
-    {
-        $email = $request->validated()['email'];
-
-        $url = $this->userService->createToken($email);
-
-        return response()->json([
-            'message' => 'Url has been created and was sent successfully, this will expire in 30 minutes',
-            'url' => $url
-        ]);
-    }
-
-    public function registerAdmin(RegisterAdminRequest $request)
-    {
-        $validated = $request->validated();
-        $data = RegisterDTO::createAdmin($validated['email'], $validated['password']);
-
-        $this->authService->registerAdmin($data, $validated['token']);
     }
 }

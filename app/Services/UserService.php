@@ -120,24 +120,4 @@ class UserService
             $this->logout($user);
         });
     }
-
-    /**
-     * creates an url and send the url with token in the `$email`
-     * of the user and returning it
-     * @param string $email
-     * @return string
-     */
-    public function createToken(string $email)
-    {
-        $token = Str::random(64);
-        $url =  config('app.frontend_url') . "/registerAdmin/$token";
-
-        DB::transaction(function () use ($token, $email, $url) {
-            $this->userRepo->createAdminCreationToken($token);
-
-            Mail::to($email)->send(new AdminCreationMail($email, $url));
-        });
-
-        return $url;
-    }
 }

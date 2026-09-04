@@ -38,28 +38,4 @@ class UserRepository
     {
         $user->update(['password' => $password]);
     }
-
-    /**
-     * creates a token base on the passed `$token` and adds an
-     * expiration that will expire in 30 minutes
-     * @param string $token
-     * @return AdminCreation
-     */
-    public function createAdminCreationToken(string $token)
-    {
-        return $this->adminCreation::create([
-            'token' => $token,
-            'expires_at' => now()->addMinutes(30)
-        ]);
-    }
-
-    /**
-     * deletes the `$token` in admin creation table
-     * @param string $token
-     * @return void
-     */
-    public function removeAdminCreationToken(string $token)
-    {
-        $this->adminCreation->where('token', $token)->delete();
-    }
 }

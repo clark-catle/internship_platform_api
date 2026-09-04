@@ -50,11 +50,4 @@ class AuthService
             'user' => $user
         ];
     }
-
-    public function registerAdmin(RegisterDTO $data, string $token)
-    {
-        DB::transaction(function () use ($data) {
-            $newUser = $this->authRepo->create($data);
-        });
-    }
 }

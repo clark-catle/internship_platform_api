@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\AdminCreation;
 use App\Policies\NotificationPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;

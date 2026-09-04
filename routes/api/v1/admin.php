@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\V1\AdminCreationController;
 use App\Http\Controllers\V1\CompanyController;
 use App\Http\Controllers\V1\InternshipController;
 use App\Http\Controllers\V1\UserController;
@@ -13,7 +14,7 @@ Route::middleware(['role:admin'])->group(function () {
   Route::delete('/internship/{internship}/forceRemove', [InternshipController::class, 'forceRemove'])->name('forceRemove');
 
   Route::prefix('createAdmin')->group(function () {
-    Route::post('/', [UserController::class, 'createToken'])->name('createToken');
-    Route::post('/register', [UserController::class, 'registerAdmin'])->name('registerAdmin');
+    Route::post('/', [AdminCreationController::class, 'createToken'])->name('createToken');
+    Route::post('/register', [AdminCreationController::class, 'registerAdmin'])->name('registerAdmin');
   });
 });
