@@ -44,11 +44,16 @@ class StudentController extends Controller
         ]);
     }
 
-    #[Endpoint(title: 'Get Student info', description: 'The user that has a student role can get their user info with their student info')]
+    #[Endpoint(title: 'Get Student info', description: 'The user that has a student role can get their user info with their student info, if there\'s no student info, it will only return empty array')]
     public function getStudent()
     {
         $user = request()->user();
 
-        return UserResource::make($this->studentService->getCompany($user));
+        $student = $this->studentService->getCompany($user);
+
+        if (!$student)
+            return response()->json([]);
+
+        return StudentResource::make($student);
     }
 }

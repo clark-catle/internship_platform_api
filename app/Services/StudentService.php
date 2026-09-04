@@ -118,17 +118,18 @@ class StudentService
     }
 
     /**
-     * returns a student info base on the passed `$user`
+     * returns a student info base on the passed `$user`, if 
+     * there's no student info, it will return null
      * @param User $user
      * @throws ConflictHttpException
-     * @return User
+     * @return Student | null
      */
     public function getCompany(User $user)
     {
         if (!$this->studentRepo->studentExist($user))
-            throw new ConflictHttpException('User doesn\'t have a student profile yet.');
+            return null;
 
-        return $user->load('student');
+        return $user->student;
     }
 
     /**
