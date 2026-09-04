@@ -6,6 +6,7 @@ use App\DTOs\Auth\RegisterDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminRequests\CreateTokenForAdminCreation;
 use App\Http\Requests\AdminRequests\RegisterAdminRequest;
+use App\Http\Resources\AdminCreationResource;
 use App\Http\Resources\UserResource;
 use App\Services\AdminCreationService;
 use Dedoc\Scramble\Attributes\Endpoint;
@@ -17,7 +18,17 @@ class AdminCreationController extends Controller
         //
     }
 
-    #[Endpoint(title: 'Create Admin', description: 'The admin can create a admin creation token that will be used for user creation that role is an admin')]
+    public function viewTokens()
+    {
+        $data =  $this->adminCreateService->viewAllToken();
+
+        return response()->json([
+            'data' =>  AdminCreationResource::collection($data),
+            'frontend_url' => config('app.frontend_url') . "/registerAdmin/"
+        ]);
+    }
+
+    #[Endpoint(title: 'Create Token for Admin Acc Creation', description: 'The admin can create a admin creation token that will be used for user creation that role is an admin')]
     public function createToken(CreateTokenForAdminCreation $request)
     {
         $email = $request->validated()['email'];
@@ -30,6 +41,7 @@ class AdminCreationController extends Controller
         ]);
     }
 
+    #[Endpoint(title: 'Register as an Admin', description: 'The new user that will be created will automatically be an admin as long as the passed token is valid, not used, and not expired')]
     public function registerAdmin(RegisterAdminRequest $request)
     {
         $validated = $request->validated();
@@ -40,4 +52,6 @@ class AdminCreationController extends Controller
 
         return UserResource::make($newUser);
     }
+
+    // viewing of own profile should be used in a single api
 }

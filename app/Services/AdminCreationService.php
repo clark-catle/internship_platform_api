@@ -67,4 +67,13 @@ class AdminCreationService
             return $this->authRepo->create($data);
         });
     }
+
+    /**
+     * returnn all the info of Admin Creation table
+     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\AdminCreation>
+     */
+    public function viewAllToken()
+    {
+        return $this->adminCreateRepo->viewAll();
+    }
 }

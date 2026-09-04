@@ -57,4 +57,13 @@ class AdminCreationRepository
     {
         $info->delete();
     }
+
+    /**
+     * returns all the info
+     * @return \Illuminate\Database\Eloquent\Collection<int, AdminCreation>
+     */
+    public function viewAll()
+    {
+        return $this->adminCreation->all();
+    }
 }
