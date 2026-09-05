@@ -7,6 +7,7 @@ use App\DTOs\Internship\EditInternshipDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InternshipRequests\AddInternshipRequest;
 use App\Http\Requests\InternshipRequests\EditInternshipRequest;
+use App\Http\Requests\InternshipRequests\ForceRemoveRequest;
 use App\Http\Resources\ApplicationResource;
 use App\Http\Resources\InternshipResource;
 use App\Models\Internship;
@@ -25,6 +26,9 @@ class InternshipController extends Controller
     {
         $user = request()->user();
         $internship = $this->internshipService->companyInternship($user);
+
+        if (!$internship)
+            return response()->json([]);
 
         return InternshipResource::collection($internship);
     }
@@ -104,9 +108,13 @@ class InternshipController extends Controller
     }
 
     #[Endpoint(title: 'Force remove internship', description: 'The user admin can forcefully delete the internship if there\'s some problem in the internship post, the internship will be soft deleted and will be marked that it was deleted by the admin so it can\'t be restored')]
-    public function forceRemove(Internship $internship)
+    public function forceRemove(ForceRemoveRequest $request, Internship $internship)
     {
-        $this->internshipService->forceRemove($internship, request()->user());
+        $this->internshipService->forceRemove(
+            $internship,
+            $request->validated()['reason'],
+            request()->user()
+        );
 
         return response()->json(['message' => "The internship has been deleted permanently!"]);
     }

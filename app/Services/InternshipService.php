@@ -8,7 +8,9 @@ use App\Enum\Application\ApplicationStatusEnum;
 use App\Jobs\InternshipJobs\InternshipForceDeleteMailJob;
 use App\Models\Internship;
 use App\Models\User;
+use App\Notifications\InternshipNotification\ForceRemoveInternship;
 use App\Repositories\ApplicationRepository;
+use App\Repositories\CompanyRepository;
 use App\Repositories\InternshipRepository;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -23,16 +25,18 @@ class InternshipService
         private CompanyService $companyService,
         private InternshipRepository $internshipRepo,
         private SkillService $skillService,
-        private ApplicationRepository $applicationRepo
+        private ApplicationRepository $applicationRepo,
+        private CompanyRepository $companyRepo
     ) {}
 
     /**
      * return all the internship
-     * @return \Illuminate\Database\Eloquent\Collection<int, Internship>
+     * @return \Illuminate\Database\Eloquent\Collection<int, Internship> | null
      */
     public function companyInternship(User $user)
     {
-        $this->companyService->ensureCompanyExist($user);
+        if (!$this->companyRepo->companyExist($user))
+            return null;
 
         return $this->internshipRepo->companyInternship($user->company);
     }
@@ -110,7 +114,16 @@ class InternshipService
         });
     }
 
-    public function forceRemove(Internship $internship, User $user)
+    /**
+     * will force remove of the `$internship` and making all of its application
+     * status into rejected and sending a notification to the company who 
+     * posted the `$internship` and an email
+     * @param Internship $internship
+     * @param string $reason
+     * @param User $user
+     * @return void
+     */
+    public function forceRemove(Internship $internship, string $reason, User $user)
     {
         $internship->load(['company.user']);
 
@@ -120,7 +133,7 @@ class InternshipService
             $this->applicationRepo->rejectAllApplicationOfInternship($internship);
         });
 
-        InternshipForceDeleteMailJob::dispatch($internship->company->user);
+        $internship->company->user->notify(new ForceRemoveInternship($internship, $reason));
     }
 
     /**
