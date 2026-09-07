@@ -26,6 +26,9 @@ class UserController extends Controller
         $status = UserStatusEnum::from($request->validated()['status']);
         $user = $this->userService->userChangeStatus($status, $user);
 
-        return UserResource::make($user);
+        return response()->json([
+            'message' => 'User status has been changed successfully!',
+            'user' => UserResource::make($user)
+        ]);
     }
 }

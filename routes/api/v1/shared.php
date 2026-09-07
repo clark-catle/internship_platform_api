@@ -8,10 +8,12 @@ use App\Http\Controllers\V1\PasswordController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('role.not:company')->group(function () {
-  // View logo of the company
-  Route::get('/company', [CompanyController::class, 'viewCompany'])->name('viewCompany');
-  Route::get('/company/{company}', [CompanyController::class, 'viewSpecificCompany'])->name('viewSpecificCompany');
-  Route::get('/company/{company}/logo', [CompanyController::class, 'getCompanyLogo'])->name('getCompanyLogo');
+  // Company
+  Route::prefix('company')->group(function () {
+    Route::get('/', [CompanyController::class, 'viewCompany'])->name('viewCompany');
+    Route::get('/{company}', [CompanyController::class, 'viewSpecificCompany'])->name('viewSpecificCompany');
+    Route::get('/{company}/logo', [CompanyController::class, 'getCompanyLogo'])->name('getCompanyLogo');
+  });
 
   // Internship
   Route::prefix('internship')->group(function () {
