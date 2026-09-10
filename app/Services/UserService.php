@@ -120,4 +120,13 @@ class UserService
             $this->logout($user);
         });
     }
+
+    /**
+     * return all users
+     * @return \Illuminate\Database\Eloquent\Collection<int, User>
+     */
+    public function viewAllUsers()
+    {
+        return $this->userRepo->viewAllUsers();
+    }
 }

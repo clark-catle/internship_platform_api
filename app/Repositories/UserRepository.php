@@ -38,4 +38,13 @@ class UserRepository
     {
         $user->update(['password' => $password]);
     }
+
+    /**
+     * return all the users
+     * @return \Illuminate\Database\Eloquent\Collection<int, User>
+     */
+    public function viewAllUsers()
+    {
+        return $this->user->all();
+    }
 }

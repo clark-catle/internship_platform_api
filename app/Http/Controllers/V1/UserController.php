@@ -31,4 +31,12 @@ class UserController extends Controller
             'user' => UserResource::make($user)
         ]);
     }
+
+    #[Endpoint(title: 'View all user', description: 'The admin user can see all the user that is currently register in the system')]
+    public function viewAllUser()
+    {
+        $users =  $this->userService->viewAllUsers();
+
+        return UserResource::collection($users);
+    }
 }

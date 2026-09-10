@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['role:admin'])->group(function () {
   Route::prefix('user')->group(function () {
-    Route::patch('/', [UserController::class, 'userChangeStatus'])->name('userChangeStatus');
+    Route::patch('/', [UserController::class, 'viewAllUser'])->name('viewAllUser');
     Route::patch('/{user}/changeStatus', [UserController::class, 'userChangeStatus'])->name('userChangeStatus');
   });
 
