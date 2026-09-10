@@ -18,7 +18,7 @@ Route::middleware(['role:admin'])->group(function () {
   Route::prefix('student')->group(function () {
     Route::get('/', [StudentController::class, 'viewAllStudent'])->name('viewAllStudent');
     Route::get('/{student}', [StudentController::class, 'viewStudent'])->name('viewStudent');
-    Route::get('/{student}/logo', [StudentController::class, 'viewResumeOfStudent'])->name('viewResumeOfStudent');
+    Route::get('/{student}/resume', [StudentController::class, 'viewResumeOfStudent'])->name('viewResumeOfStudent');
   });
 
   Route::delete('/internship/{internship}/forceRemove', [InternshipController::class, 'forceRemove'])->name('forceRemove');

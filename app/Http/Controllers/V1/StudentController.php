@@ -54,7 +54,7 @@ class StudentController extends Controller
     {
         $user = request()->user();
 
-        $student = $this->studentService->getCompany($user);
+        $student = $this->studentService->getStudent($user);
 
         if (!$student)
             return response()->json([]);
@@ -81,5 +81,13 @@ class StudentController extends Controller
     public function viewResumeOfStudent(Student $student)
     {
         return $this->fileService->getFile($student->resume);
+    }
+
+    #[Endpoint(title: 'View own resume of the student', description: 'The student can view their own resume')]
+    public function viewResume()
+    {
+        $user = request()->user();
+
+        return $this->studentService->viewResume($user);
     }
 }

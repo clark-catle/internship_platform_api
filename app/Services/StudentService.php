@@ -124,7 +124,7 @@ class StudentService
      * @throws ConflictHttpException
      * @return Student | null
      */
-    public function getCompany(User $user)
+    public function getStudent(User $user)
     {
         if (!$this->studentRepo->studentExist($user))
             return null;
@@ -168,5 +168,29 @@ class StudentService
     public function viewAllStudent()
     {
         return $this->studentRepo->viewAllStudent();
+    }
+
+    /**
+     * returns the `$user` resume by checking if the 
+     * student info exists because that's where the 
+     * resume id stored, then after that it checks if the 
+     * resume of the student trully exists, after that check 
+     * it will now get the file
+     * @param User $user
+     * @throws Exception
+     * @throws ConflictHttpException
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function viewResume(User $user)
+    {
+        if (!$user->student()->exists())
+            throw new Exception('You don\'t have a student info yet');
+
+        $student = $user->student;
+
+        if (!$this->studentRepo->studentResumeExist($student))
+            throw new ConflictHttpException('Student doesn\'t have a resume yet.');
+
+        return $this->fileService->getFile($student->resume);
     }
 }
