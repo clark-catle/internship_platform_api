@@ -15,7 +15,10 @@ Route::middleware(['role:admin'])->group(function () {
 
   Route::patch('/company/{company}/verify', [CompanyController::class, 'changeVerification'])->name('changeVerification');
 
-  Route::get('/student', [StudentController::class, 'viewAllStudent'])->name('viewAllStudent');;
+  Route::prefix('student')->group(function () {
+    Route::get('/', [StudentController::class, 'viewAllStudent'])->name('viewAllStudent');
+    Route::get('/{student}', [StudentController::class, 'viewStudent'])->name('viewStudent');
+  });
 
   Route::delete('/internship/{internship}/forceRemove', [InternshipController::class, 'forceRemove'])->name('forceRemove');
 

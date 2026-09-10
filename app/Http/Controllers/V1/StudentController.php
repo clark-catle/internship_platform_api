@@ -9,12 +9,15 @@ use App\Http\Requests\StudentRequests\AddStudentRequest;
 use App\Http\Requests\StudentRequests\EditStudentRequest;
 use App\Http\Resources\StudentResource;
 use App\Http\Resources\UserResource;
+use App\Models\Student;
 use App\Services\StudentService;
 use Dedoc\Scramble\Attributes\Endpoint;
 
 class StudentController extends Controller
 {
-    public function __construct(private StudentService $studentService) {}
+    public function __construct(
+        private StudentService $studentService,
+    ) {}
 
     #[Endpoint(title: 'Add Student info', description: 'The user that has a student role can add their student info')]
     public function addStudent(AddStudentRequest $request)
@@ -64,5 +67,11 @@ class StudentController extends Controller
         $students = $this->studentService->viewAllStudent();
 
         return StudentResource::collection($students);
+    }
+
+    #[Endpoint(title: 'View student info', description: 'The admin can view specific student')]
+    public function viewStudent(Student $student)
+    {
+        return StudentResource::make($student->load(['course', 'skill']));
     }
 }
