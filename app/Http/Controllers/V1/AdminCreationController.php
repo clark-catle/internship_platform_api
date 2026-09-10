@@ -63,6 +63,4 @@ class AdminCreationController extends Controller
             'message' => 'The token has been deleted successfully!',
         ]);
     }
-
-    // viewing of own profile should be used in a single api
 }

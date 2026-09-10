@@ -26,7 +26,6 @@ Route::middleware(['role:admin'])->group(function () {
   Route::prefix('createAdmin')->group(function () {
     Route::get('/', [AdminCreationController::class, 'viewTokens'])->name('viewTokens');
     Route::post('/', [AdminCreationController::class, 'createToken'])->name('createToken');
-    Route::post('/register', [AdminCreationController::class, 'registerAdmin'])->name('registerAdmin');
     Route::delete('/{adminCreation}', [AdminCreationController::class, 'deleteToken'])->name('deleteToken');
   });
 });

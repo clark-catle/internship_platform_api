@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\V1\AdminCreationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\AuthController;
@@ -12,6 +13,8 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['throttle:auth'])->group(function () {
         Route::post('/login', [AuthController::class, 'login'])->name('login');
         Route::post('/register', [AuthController::class, 'register'])->name('register');
+
+        Route::post('/registerAdmin', [AdminCreationController::class, 'registerAdmin'])->name('registerAdmin');
     });
 
     Route::middleware(['auth:sanctum', 'status', 'verified', 'throttle:api'])->group(function () {
