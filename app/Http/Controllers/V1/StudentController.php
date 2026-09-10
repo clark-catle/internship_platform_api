@@ -10,6 +10,7 @@ use App\Http\Requests\StudentRequests\EditStudentRequest;
 use App\Http\Resources\StudentResource;
 use App\Http\Resources\UserResource;
 use App\Models\Student;
+use App\Services\FileService;
 use App\Services\StudentService;
 use Dedoc\Scramble\Attributes\Endpoint;
 
@@ -17,6 +18,7 @@ class StudentController extends Controller
 {
     public function __construct(
         private StudentService $studentService,
+        private FileService $fileService
     ) {}
 
     #[Endpoint(title: 'Add Student info', description: 'The user that has a student role can add their student info')]
@@ -73,5 +75,11 @@ class StudentController extends Controller
     public function viewStudent(Student $student)
     {
         return StudentResource::make($student->load(['course', 'skill']));
+    }
+
+    #[Endpoint(title: 'View resume of student', description: 'The admin can view the resume of the student')]
+    public function viewResumeOfStudent(Student $student)
+    {
+        return $this->fileService->getFile($student->resume);
     }
 }
