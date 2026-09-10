@@ -57,6 +57,8 @@ class StudentController extends Controller
         return StudentResource::make($student);
     }
 
+
+    #[Endpoint(title: 'View all student', description: 'The admin can view all student')]
     public function viewAllStudent()
     {
         $students = $this->studentService->viewAllStudent();
