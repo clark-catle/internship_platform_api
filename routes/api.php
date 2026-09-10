@@ -4,6 +4,7 @@ use App\Http\Controllers\V1\AdminCreationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\AuthController;
+use App\Http\Controllers\V1\PasswordController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -11,10 +12,14 @@ Route::get('/user', function (Request $request) {
 
 Route::prefix('v1')->group(function () {
     Route::middleware(['throttle:auth'])->group(function () {
+
         Route::post('/login', [AuthController::class, 'login'])->name('login');
         Route::post('/register', [AuthController::class, 'register'])->name('register');
 
         Route::post('/registerAdmin', [AdminCreationController::class, 'registerAdmin'])->name('registerAdmin');
+
+        Route::post('/forgotPassword', [PasswordController::class, 'sendForgotPassword'])->name('sendForgotPassword');
+        Route::patch('/resetPassword', [PasswordController::class, 'resetPassword'])->name('resetPassword');
     });
 
     Route::middleware(['auth:sanctum', 'status', 'verified', 'throttle:api'])->group(function () {

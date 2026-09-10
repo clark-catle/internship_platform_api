@@ -31,8 +31,6 @@ Route::prefix('application')->group(function () {
 
 // User
 Route::prefix('user')->group(function () {
-  Route::post('/forgotPassword', [PasswordController::class, 'sendForgotPassword'])->name('sendForgotPassword');
-  Route::patch('/resetPassword', [PasswordController::class, 'resetPassword'])->name('resetPassword');
   Route::patch('/changePassword', [PasswordController::class, 'changePassword'])->name('changePassword');
 
   // notification
