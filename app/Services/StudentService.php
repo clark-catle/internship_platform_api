@@ -160,4 +160,13 @@ class StudentService
 
         return $user->student;
     }
+
+    /**
+     * returns all the student info
+     * @return \Illuminate\Database\Eloquent\Collection<int, Student>
+     */
+    public function viewAllStudent()
+    {
+        return $this->studentRepo->viewAllStudent();
+    }
 }

@@ -68,4 +68,13 @@ class StudentRepository
     {
         $student->update($data);
     }
+
+    /**
+     * returns all the student info
+     * @return \Illuminate\Database\Eloquent\Collection<int, Student>
+     */
+    public function viewAllStudent()
+    {
+        return $this->student->with(['course', 'skill'])->get();
+    }
 }

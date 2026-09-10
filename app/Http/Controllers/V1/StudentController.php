@@ -56,4 +56,11 @@ class StudentController extends Controller
 
         return StudentResource::make($student);
     }
+
+    public function viewAllStudent()
+    {
+        $students = $this->studentService->viewAllStudent();
+
+        return StudentResource::collection($students);
+    }
 }
