@@ -27,7 +27,7 @@ class PasswordController extends Controller
         ]);
     }
 
-    #[Endpoint(title: 'Reset password', description: 'The user can change their password by pass a proper token and credential like email and password')]
+    #[Endpoint(title: 'Reset password', description: 'The user can change their password by passing a proper token and credential like email and password')]
     public function resetPassword(ResetPasswordRequest $request)
     {
         $data = ResetPasswordDTO::fromRequest($request);

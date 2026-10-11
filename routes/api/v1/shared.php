@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\V1\ApplicationController;
 use App\Http\Controllers\V1\CompanyController;
+use App\Http\Controllers\V1\EmailController;
 use App\Http\Controllers\V1\InternshipController;
 use App\Http\Controllers\V1\NotificationController;
 use App\Http\Controllers\V1\PasswordController;
@@ -32,6 +33,7 @@ Route::prefix('application')->group(function () {
 // User
 Route::prefix('user')->group(function () {
   Route::patch('/changePassword', [PasswordController::class, 'changePassword'])->name('changePassword');
+  Route::patch('/changeEmail', [EmailController::class, 'sendChangeEmail'])->name('changePassword');
 
   // notification
   Route::prefix('notification')->group(function () {

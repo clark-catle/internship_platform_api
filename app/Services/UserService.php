@@ -129,4 +129,20 @@ class UserService
     {
         return $this->userRepo->viewAllUsers();
     }
+
+    /**
+     * update the `$user` email into the passed `$email`
+     * then logging out the `$user`
+     * @param string $email
+     * @param User $user
+     * @return void
+     */
+    public function changeEmail(string $email, User $user)
+    {
+        DB::transaction(function () use ($email, $user) {
+            $this->userRepo->changeEmail($email, $user);
+
+            $this->logout($user);
+        });
+    }
 }

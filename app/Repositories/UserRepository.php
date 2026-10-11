@@ -47,4 +47,15 @@ class UserRepository
     {
         return $this->user->all();
     }
+
+    /**
+     * update the email of the passed `$user` into new `$email` value
+     * @param string $email
+     * @param User $user
+     * @return void
+     */
+    public function changeEmail(string $email, User $user)
+    {
+        $user->update(['email' => $email]);
+    }
 }
